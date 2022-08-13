@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { Typography, TextField, Button, Snackbar, MuiAlert, Grid, Paper} from '@mui/material/Typography';
+import { Typography, TextField, Button, Snackbar, Grid, Paper} from '@mui/material';
+import MuiAlert from '@mui/material/Alert';
 import { useTranslation } from 'react-i18next';
 
 // components
