@@ -34,6 +34,21 @@ app.post('/get-user-by-email', async (req, res) => {
 
   // * CHECK IF USER EXIST
   const user_object = await auth.getUserByEmail(email)
+  .catch((error) => {}) 
+  
+  // * RETURN OBJECT
+  let response = user_object? user_object : false
+  return res.json(response)
+})
+
+// GET USER BY UID
+app.post('/get-user-by-uid', async (req, res) => {
+  
+  // * GET EMAIL 
+  const {uid} = req.body
+
+  // * CHECK IF USER EXIST
+  const user_object = await auth.getUser(uid)
   .catch((error) => {})
   
   // * RETURN OBJECT

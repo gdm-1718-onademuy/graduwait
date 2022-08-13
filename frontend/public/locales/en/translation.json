@@ -92,7 +92,9 @@
         "9": "New password",
         "10": "Repeat password",
         "11": "Reviews",
-        "12": "Birthday"
+        "12": "Birthday",
+        "13": "Rate (max €20/h)",
+        "14": "Set a rate for tutoring, this can only be max €20/h."
     },
     "Buttons": {
         "1": "Save",
@@ -100,7 +102,9 @@
         "3": "Change profile",
         "4": "Change password",
         "5": "Save changes",
-        "6": "Cancel"
+        "6": "Cancel",
+        "7": "Save and become tutor"
+
     },
     "Match": {
         "1": "Distance",

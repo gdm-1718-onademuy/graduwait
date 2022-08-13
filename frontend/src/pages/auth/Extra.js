@@ -7,6 +7,9 @@ import { Alert, TextField, Grid, Button, InputLabel} from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import {useTranslation} from 'react-i18next';
+
+
 
 // components
 import LayoutForms from "./components/LayoutForms.js";
@@ -40,9 +43,11 @@ function Extra() {
   const firstName = location.state.firstName
   const lastName = location.state.lastName
   const email = location.state.email
+  const meetingMyAddress = location.state.meetingMyAddress
   const [birthday, setBirthday] = useState("");
   const [birthdaysHighschool, setBirthdaysHighschool] = useState("");
   const [errorForm, setErrorForm] = useState("");
+  const { t } = useTranslation()
 
 
   const handleChange = (newBirthday) => {
@@ -51,37 +56,27 @@ function Extra() {
 
   const navigate = useNavigate();
 
-  const go_dashboard = () => {
-    //addDataUser(email, user.uid, firstName, lastName, bijlesKrijgen, bijlesGeven, richting, geolocation, kost, birthday, avatar)
-    if (birthday !== ""){
-      if (bijlesGeven === true){
-          if (birthday.getTime() < birthdaysHighschool.getTime()){
-            if (bijlesGeven){
-              if (kost !== ""){
-                addDataUser(email, user.uid, firstName, lastName, bijlesKrijgen, bijlesGeven, richting, geolocation, kost, birthday, avatar)
-                navigate(
-                  '/dashboard',
-                )
-              } else {
-                setErrorForm("Choose a price per hour to earn by tutoring.")
-              }
-            } else {
-                addDataUser(email, user.uid, firstName, lastName, bijlesKrijgen, bijlesGeven, richting, geolocation, kost, birthday, avatar)
-                navigate(
-                  '/dashboard',
-                )
-            }
-          } else {
-            setErrorForm("You should be born on " + birthdaysHighschool.toISOString().split('T')[0] + " or earlier.")
-          }
+  const go_dashboard = async () => {
+    if (birthday !== "" && birthday.getTime() < birthdaysHighschool.getTime()){
+      if ((bijlesGeven && kost !== "") || !bijlesGeven){
+        await addDataUser(email, user.uid, firstName, lastName, bijlesKrijgen, bijlesGeven, richting, geolocation, kost, birthday, avatar, meetingMyAddress)
+        navigate(
+         '/dashboard',
+        )
       }
     } else {
-      setErrorForm("Fill in your birthday.")
+      if (birthday === ""){
+        setErrorForm("Make sure you select your birthday")
+      } else if (birthday.getTime() >= birthdaysHighschool.getTime()){
+        setErrorForm("You should be a certain age to register")
+      } else if (bijlesGeven && kost === ""){
+        setErrorForm("Make sure you fill in your rate, with a maximum value of €20/h")
+      } else {
+        console.log("not working")
+        setErrorForm("Fill in all the fields correctly")
+      }
     }
-    
-    //registerWithEmailAndPassword(email, password, firstName, lastName, woonplaats, kost, locatie, richting, bijlesGeven, bijlesKrijgen, avatar);
   }
-
 
   useEffect(() => {
     console.log(avatar)
@@ -138,12 +133,12 @@ function Extra() {
                 </Grid>
               
               {bijlesGeven ? 
-                  <Grid item xs={12}>
+                <Grid item xs={12}>
                   <TextField
                     required
                     fullWidth
                     id="kost"
-                    label="Price per hour for tutoring. (not above €20)"
+                    label={t('Userdata.13')}
                     name="kost"
                     autoComplete="kost"
                     value={kost}

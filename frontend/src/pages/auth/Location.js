@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
-import { Alert, FormControl, Autocomplete, TextField, Box, Grid, Typography, Button, Select, MenuItem, InputLabel, ButtonTypography, createTheme, ThemeProvider } from '@mui/material';
+import {FormControlLabel, Checkbox, Alert, FormControl, Autocomplete, TextField, Box, Grid, Typography, Button, Select, MenuItem, InputLabel, ButtonTypography, createTheme, ThemeProvider } from '@mui/material';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import parse from 'autosuggest-highlight/parse';
 import throttle from 'lodash/throttle';
@@ -39,6 +39,7 @@ function loadScript(src, position, id) {
     const [inputValue, setInputValue] = useState('');
     const [options, setOptions] = useState([]);
     const loaded = useRef(false);
+    const [meetingMyAddress, setMeetingMyAddress] = useState(false);
     const [richting, setRichting] = useState('');
     const [fieldsOfStudy, setFieldsOfStudy] = useState("")
     const [user, loading, error] = useAuthState(auth);
@@ -68,11 +69,11 @@ function loadScript(src, position, id) {
       if (value !== "" && richting !== ""){
         navigate(
           '/extra',
-          {state: { bijlesKrijger: bijlesKrijgen, bijlesGever: bijlesGeven, richting: richting, location: value, firstName: firstName, lastName: lastName, email: email}}
+          {state: { bijlesKrijger: bijlesKrijgen, bijlesGever: bijlesGeven, richting: richting, location: value, firstName: firstName, lastName: lastName, email: email, meetingMyAddress: meetingMyAddress}}
         )
       } else {
         if (! richting){
-          setErrorForm("Please select your education and school.")
+          setErrorForm("Please select your field of study and educational institution.")
         } else if (! value) {
           setErrorForm("Please select your home address")
         }
@@ -154,14 +155,14 @@ function loadScript(src, position, id) {
             
             <Grid item xs={12}>
             <FormControl fullWidth> 
-              <InputLabel variant="outlined" id="richting">Education, school</InputLabel>
+              <InputLabel variant="outlined" id="richting">Field of study, educational institution</InputLabel>
                 <Select
                   fullWidth
                   //sx={{ width: 360 }}
                   variant="outlined"
                   id="richting"
                   value={richting}
-                  label="Education, school"
+                  label="Field of study, educational institution"
                   onChange={(e) => setRichting(e.target.value)}
                 >
                   {fieldsOfStudy && fieldsOfStudy.length > 0 && fieldsOfStudy.map((option , id) => (
@@ -251,6 +252,18 @@ function loadScript(src, position, id) {
                 }}
               />
             </Grid>
+            <Grid item xs={12} sx={{ m: 1, p: -1}}>
+                  <FormControlLabel
+                  control={<Checkbox value="meetingMyAddress" color="secondary" />}
+                  label="Possibility to meet at my address"
+                  id="meetingMyAddress"
+                  value={meetingMyAddress}
+                  onChange={(e) => 
+                    setMeetingMyAddress(!meetingMyAddress)
+                  }
+              />
+            </Grid>
+
               
 
               <Grid item xs={12} sx={{ mt: 4 }}>

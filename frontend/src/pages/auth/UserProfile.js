@@ -8,33 +8,28 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 import { useAuthState } from "react-firebase-hooks/auth";
-//mport { auth, db, logout, showProfileData } from "../../services/config/firebase";
 import LoggedIn from "../auth/components/LoggedIn";
 import { CssBaseline, Box, Container, Typography, Grid, Paper, View} from '@mui/material';
 import Title from '../Client/components/Title'; 
 import Stack from '@mui/material/Stack';
 import { useNavigate, useLocation } from "react-router-dom";
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Rating from '@mui/material/Rating';
+import { Button, TextField, Rating, Link, Alert, Avatar, Autocomplete} from '@mui/material';
+
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardContent from "@material-ui/core/CardContent";
-import Avatar from '@mui/material/Avatar';
-import Autocomplete from '@mui/material/Autocomplete';
 import parse from 'autosuggest-highlight/parse';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import {useTranslation} from 'react-i18next';
-
+import LayoutForms from "./components/LayoutForms";
 import colors from '../colours.scss';
 import { passwordValidator, emailValidator} from "../../services/functions/validations";
 import { reload, updatePassword } from "firebase/auth";
-import LayoutForms from "./components/LayoutForms";
-
+import ButtonNewHere from "./components/ButtonNewHere";
 import {
-  auth, getFieldsOfStudy, saveNewPassword, getUserData, getReviews, addDataUser
+  auth, getFieldsOfStudy, saveNewPassword, getUserData, getReviews, addDataUser, changeTutoring, addKostUser
 } from "../../services/config/firebase";
 
 
@@ -65,7 +60,9 @@ function UserProfile() {
   const [changePassword, setChangePassword] = useState(false)
   const [isTutor, setIsTutor] = useState(false);
   const [isTutee, setIsTutee] = useState(false);
-
+  const [refresh, setRefresh] = useState(false);
+  const [popUpExtraInfo, setPopUpExtraInfo] = useState(false);
+  const [addKost, setAddKost] = useState()
 
   const [newPassword, setNewPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -78,6 +75,46 @@ function UserProfile() {
 
 
   const { t } = useTranslation()
+
+  const tutorChange = async (event, toDo) => {
+    event.preventDefault()
+    // als TUTOR WORDEN -> DAN ZORGEN DAT JE PRIJS, EN NOG WAT DINGEN TOEVOEGT
+    if (toDo = "enableTutoring"){
+      setPopUpExtraInfo(true)
+    } else {
+      await changeTutoring(user.uid, toDo)
+      setRefresh(true)
+    }
+    
+    //console.log(response)
+   // setFieldsOfStudy(response)
+
+    //const isChanged = await changeTutoring(user.uid, toDo)
+    //console.log(await changeTutoring(user.uid, toDo))
+  }
+
+  useEffect(async() => {
+    if (popUpExtraInfo === true){
+      console.log("popup extra info")
+    }
+   
+  }, [popUpExtraInfo])
+
+
+  useEffect(async() => {
+    console.log(refresh)
+    if (refresh === true){
+      const userData = await getUserData(user.uid)
+      if (userData.getTutoring){
+        setIsTutee(true)
+      }
+      if (userData.giveTutoring){
+        setIsTutor(true)
+      }
+      setRefresh(false)
+    } 
+    
+  }, [refresh])
 
 
   // change birthday
@@ -188,7 +225,7 @@ function UserProfile() {
         if (response.avatar) {
           reviewData.avatar = response.avatar
         }
-        setReviews(reviews.concat(reviewData))
+        setReviews(reviews => reviews.concat(reviewData))
       }
     }
   }, [reviewsWithout])
@@ -202,15 +239,28 @@ function UserProfile() {
     //setChange(false)
   }
 
+  const doAddCost = async () => {
+    if(addKost !== ""){
+      await addKostUser(user.uid, addKost)
+      await changeTutoring(user.uid, "enableTutoring")
+      setPopUpExtraInfo(false)
+      setRefresh(true)
+      
+    }
+  }
+
   const saveNewPassword =  () => {
     if (newPassword !== "" &&
     repeatPassword !== "" &&
-    passwordValidator() &&
+    passwordValidator(newPassword) &&
     newPassword === repeatPassword 
   ){
-    saveNewPassword()
+    //saveNewPassword()
+    console.log("save new password")
+    setNewPasswordAfterValidation()
+    //newPasswordAdding(true)
   } else {
-    if (! passwordValidator(password)){
+    if (! passwordValidator(newPassword)){
       setErrorForm("Make sure the password contains at least 8 characters, including a capital letter and digit.")
     } else if (newPassword !== repeatPassword){
       setErrorForm("Make sure the passwords are identical.")
@@ -221,9 +271,7 @@ function UserProfile() {
   }
 
 
-  useEffect(async() => {
-    if (newPasswordAdding === true){
-      console.log(newPassword, user.uid)
+  const setNewPasswordAfterValidation = async () => {
       // * CREATE FETCH DATA OBJECT 
       let fetchData = {
         crossDomain: false,
@@ -242,13 +290,15 @@ function UserProfile() {
       .then(response => response.json())
       .then((data) => {
         setPasswordUpdated(data)
+        setNewPasswordAdding(false)
+        cancel()
       })
       .catch((error) => {
         setPasswordUpdated(error)
       })
         
-      }
-  }, [newPasswordAdding])
+    }
+  
 
   useEffect(async() => {
     if (passwordUpdated !== false){
@@ -261,12 +311,11 @@ function UserProfile() {
     }
   }, [passwordUpdated])
 
-
-
   const cancel = () => {
     setChange(false)
     setChangePassword(false)
-    reload()
+    setPopUpExtraInfo(false)
+    user.reload()
   }
 
   const ChangePassword = () => {
@@ -274,6 +323,12 @@ function UserProfile() {
       <>
           <Box component="form" noValidate autoComplete="off" sx={{ mt: 3 }}>
             <Grid container spacing={2}>
+            {errorForm ?
+              <Grid item xs={12} >
+              <Alert severity="error">{errorForm}</Alert>
+            </Grid>:
+            <></>
+            }
         
               <Grid item xs={12} sm={4}>
                 <p>{t('Userdata.9')}</p>
@@ -351,6 +406,107 @@ function UserProfile() {
     setLastName(value)
   }
 
+  const PopUp = () => {
+    return (
+    <>
+    <Container component="main" maxWidth="xs">
+      <Box
+          sx={{
+          marginTop: 4,
+          display: 'block',
+          flexDirection: 'column',
+          alignItems: 'center',
+          verticalAlign: 'middle'
+        }}
+      >   
+          <Paper
+            sx={{
+            p: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            height: '85vh',                        
+            overflow: 'auto',
+            }}
+        >
+          
+          <Box
+          sx={{
+            marginTop: 20,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+      <Grid container justifyContent="flex-end">
+        </Grid>
+          {errorForm ?
+            <Grid item xs={12} >
+            <Alert severity="error">{errorForm}</Alert>
+          </Grid>:
+          <></>
+          }
+          <Box component="form" noValidate autoComplete="off" /*onSubmit={handleSubmit}*/ sx={{ mt: 6 }}>
+          <Grid container spacing={2}>
+          <Grid item xs={12}>
+                <p>{t('Userdata.14')}</p>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              required
+              fullWidth
+              id="kost"
+              label={t('Userdata.13')}
+              name="kost"
+              autoComplete="kost"
+              value={addKost}
+              type="number"
+              InputProps={{ inputProps: { min: 0, max: 20 } }}
+              onChange={(e) => {
+                if(e.target.value <= 20){
+                  setAddKost(e.target.value)
+                } 
+              }
+              }
+            />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button 
+                type="button"
+                fullWidth
+                variant="contained"
+                onClick={doAddCost}
+                style={{
+                  backgroundColor: colors.purple,
+                  color: 'white'
+                }}
+              >{t('Buttons.7')}</Button>
+              </Grid>
+
+              <Grid item xs={12}>
+                <Button
+                  type="button"
+                  fullWidth
+                  variant="outlined"
+                  onClick={cancel}
+                  style={{
+                    color: colors.purple,
+                    //color: 'white'
+                  }}
+                > {t('Buttons.6')}          
+                </Button>
+              </Grid>
+            </Grid>
+            </Box>
+            </Box>
+          </Paper>
+          </Box>
+          </Container>
+
+    </>
+    )
+  }
+
   const EditGegevensUser = () => {
     return (
     <>
@@ -399,7 +555,7 @@ function UserProfile() {
               <Grid item xs={12} sm={4}>
                 <p>{t('Userdata.12')}</p>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} sm={8}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     required
@@ -696,6 +852,9 @@ function UserProfile() {
 
   return (
     <>
+    {!popUpExtraInfo ?
+    <>
+
     <LoggedIn/>
     <Box sx={{ display: 'flex' }}>
         <CssBaseline />
@@ -755,10 +914,9 @@ function UserProfile() {
                     type="button"
                     fullWidth
                     variant="outlined"
-                    //onClick={gevenUitschakelen}
+                    onClick={event => tutorChange(event, "disableTutoring")}
                     style={{
-                      backgroundColor: colors.blue,
-                      color: 'white'
+                      color: colors.blue,
                     }}
                     >{t('Profile.3')}
                     </Button>
@@ -768,7 +926,7 @@ function UserProfile() {
                     type="button"
                     fullWidth
                     variant="contained"
-                    //onClick={gevenInschakelen}
+                    onClick={event => tutorChange(event, "enableTutoring")}
                     style={{
                       backgroundColor: colors.blue,
                       color: 'white'
@@ -784,7 +942,7 @@ function UserProfile() {
                     type="button"
                     fullWidth
                     variant="outlined"
-                    //onClick={krijgenUitschakelen}
+                    onClick={event => tutorChange(event, "disableGettingTutored")}
                     style={{
                       //backgroundColor: colors.purple,
                       color: colors.purple
@@ -799,7 +957,7 @@ function UserProfile() {
                     type="button"
                     fullWidth
                     variant="contained"
-                    //onClick={krijgenInschakelen}
+                    onClick={event => tutorChange(event, "enableGettingTutored")}
                     style={{
                       backgroundColor: colors.purple,
                       color: 'white'
@@ -847,6 +1005,11 @@ function UserProfile() {
       </Box>
       </Box>
     </>
+    :
+    <PopUp/>
+    }
+    </>
+
   );
 }
 export default UserProfile;

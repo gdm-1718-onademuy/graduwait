@@ -24,11 +24,13 @@ import { checkDistance /*, getTutors, loadMapApi, loadTheScript, loadScript */} 
 export default function Match() {
     const [tutors, setTutors] = useState([])
     const [user, loading, error] = useAuthState(auth)
+    const [userInformation, setUserInformation] = useState()
+    const [allUsers, setAllUsers] = useState([])
     const [arraySubjects, setArraySubjects] = useState([])
     const [arrayGiveTutoring, setArrayGiveTutoring] = useState([])
     const [amountUsers, setAmountUsers] = useState(0) // de aantal
     const [amountMatches, setAmountMatches] = useState(0) // de count
-    const [matches, setMatches] = useState()
+    const [matches, setMatches] = useState([])
     const [filter, setFilter] = useState("")
     const [filterQuery, setFilterQuery] = useState("")
     const navigate = useNavigate();
@@ -39,6 +41,7 @@ export default function Match() {
     const [vakkenZelfde, setVakkenZelfde] = useState([])
     const [vakkenNewZelfde, setVakkenNewZelfde] = useState([])
     const [docDataUid, setDocDataUid] = useState()
+    const [infoUserMatch, setInfoUserMatch] = useState({})
     
 
 
@@ -81,29 +84,85 @@ export default function Match() {
           )
     }
 
+  /*const getUserById = async () => {
+    // * CREATE FETCH DATA OBJECT 
+    let fetchData = {
+      crossDomain: false,
+      method: 'POST',
+      body: JSON.stringify({ 
+          uid: user.uid, 
+          js:true
+      }),
+      headers: {
+          "Content-Type": "application/json",
+      }
+    }
+
+    await fetch("/get-user-by-uid", fetchData)
+    .then(response => response.json())
+    .then((data) => {
+        setUserInformation(data)
+    })
+    .catch((error) => {
+        setUserInformation(error)
+    })
+  }*/
+
     useEffect(() => {
-        setArraySubjects(location.state.dataKrijgen)
+        if (user){
+            setArraySubjects(location.state.dataKrijgen)
+            console.log(location.state.dataKrijgen)
+            //getUserById()
+        }
         //findMatches(["3ot8CYJzwrehJEVGMUpl", "B2VBvQVb2VTgnlNCDux2", "LxcRRiHQhht0Aj5YRdvQ", "j4YpDs8BWvpubjl1P8Eb"])
     }, [user, loading]);
 
+    /*useEffect(() => {
+        console.log(userInformation) // eigenlijk niet nodig, dan krijg je server kant data
+    }, [userInformation]);*/
+
     useEffect(() => {
-        part1()
+        if (arraySubjects.length > 0){
+            getLatLngLoggedIn()
+        }
     }, [arraySubjects]);
 
     useEffect(() => {
-        part2()
+        if (lngLoggedIn ){
+            getAllUsers()
+        }
     }, [lngLoggedIn]);
 
     useEffect(() => {
-        part3()
+        if (allUsers.length>0 ){
+            // do per user this
+            getUsersWhoTutor()
+        }
+    }, [allUsers]);
+
+
+
+    useEffect(() => {
+        if (arrayGiveTutoring.length > 0){
+            console.log(arrayGiveTutoring)
+            part3()
+        }
     }, [arrayGiveTutoring]);
 
     useEffect(() => {
         part4()
     }, [vakkenZelfde]);
 
+    useEffect(() => {
+        console.log(allUsers)
+    }, [allUsers]);
 
-    const part1 = async (arraySubjects) => {
+    useEffect(() => {
+        console.log(vakkenZelfde)
+    }, [vakkenZelfde]);
+
+
+    const getLatLngLoggedIn = async () => {
         await db.collection("users").where("uid", "==", user.uid)
             .get()
             .then((querySnapshot) => {
@@ -119,72 +178,138 @@ export default function Match() {
             });
     }
 
-    const part2 = async () => {
+    const getAllUsers = async () => {
         //setAmountUsers(0)
+        // alle users overlopen en tijdelijk opslaan in docDataUid
+         // als deze uid niet zelfde is als ingelogde, ga verder
+          // als deze user bijles GEEFT, ga verder
+           // 
+        const data = []
         await db
         .collection("users")
         .get()
         .then((querySnapshot) => { 
             if (user.uid !== null){
+                //for (const shot of querySnapshot) {
                 querySnapshot.forEach(function(doc) {
-                    setDocDataUid(doc.data().uid)
-                //if(user){
-                //console.log(doc.data().uid, user.uid)
-                if(doc.data().uid === user.uid ){
-                    // console.log("zelfde user, niks doen")
-                } else {
-                    //console.log("andere user", doc.data().firstname)
-                    if (doc.data().giveTutoring) {
-                        if (doc.data().giveTutoring.length > 0) {
-                            // dit zijn de potentiële tutors
-                            //let count = 0
-                            //let vakkenZelfde = []
-                            //let vakkenNewZelfde = []
-                            //let arrayGiveTutoring = doc.data().giveTutoring
-                            setArrayGiveTutoring(doc.data().giveTutoring)
-                            // console.log(arraySubjects, arrayGiveTutoring)
-                        }
-                    }
-                }
+                    data.push(doc.data())
         })}})
+        setAllUsers(data)
+    }
+
+    const getUsersWhoTutor = async () => {
+        //setAmountUsers(0)
+        // alle users overlopen en tijdelijk opslaan in docDataUid
+         // als deze uid niet zelfde is als ingelogde, ga verder
+          // als deze user bijles GEEFT, ga verder
+           // 
+        const data = []
+        for (const u of allUsers) {
+            // if user is not signed in user && user is tutor && has selected minimum 1 subject
+            if (u.uid !== user.uid && u.giveTutoring && u.giveTutoring.length > 0){
+                console.log(u.firstname)
+                console.log(u.giveTutoring)
+                //setInfoUserMatch({"name": "ona"})
+                setArrayGiveTutoring(u.giveTutoring)
+                setDocDataUid(u.uid)
+
+
+                /*var infoUMatch = {}
+                infoUMatch.id = u.uid
+                infoUMatch.person = u.firstname + " " + u.lastname
+                infoUMatch.uid = u.uid
+                infoUMatch.avatar = u.avatar
+                //infoUserMatch.vakkenZelfde = vakkenZelfde
+                infoUMatch.price = u.kost
+                infoUMatch.distance = checkDistance(u.latlng._lat, u.latlng._long, latLoggedIn, lngLoggedIn) // hier eig met latLoggedIn en letLoggedIn
+                console.log(infoUMatch)
+                //data.push(element)
+                setArrayGiveTutoring(u.giveTutoring)
+                //setInfoUserMatch(infoUMatch)*/
+
+            }
+        }
     }
 
     const part3 = async () => {
+        console.log("part3")
+        console.log(arrayGiveTutoring)
         let map = {};
         arraySubjects.forEach(i => map[i] = false);
         arrayGiveTutoring.forEach(i => map[i] === false && (map[i] = true));
         for (const property in map) {
             if (map[property] === true){
+                console.log(property, "dit is hetzelfde")
                 //count++;
+                console.log(vakkenNewZelfde)
+                console.log(amountMatches)
+
+                // aantal matches toevoegen met 1 als het erin voorkomt
                 setAmountMatches(amountMatches+1)
-                setVakkenNewZelfde(vakkenNewZelfde.concat(property))
+                // dezelfde vakken bundelen in array state vakkenNewZelfde, dit per user
+                setVakkenNewZelfde(vakkenNewZelfde => vakkenNewZelfde.concat(property))
                 //vakkenNewZelfde.push(property)
 
+                console.log(amountMatches, vakkenNewZelfde)
+
+                // object maken met de info van dezelfde vakken
                 const vakkenElement = {}
-                vakkenElement.subjectid = property
+                vakkenElement.subjectid = property // de id van het vak
                 db
                 .collection("subject")
-                .doc(property)
+                .doc(property) // de doc bekijken van het subject om extra info op te halen
                 .get()
                 .then((querySnapshot) => { 
                     //console.log("zelfde vak", querySnapshot.data().subject)
-                    vakkenElement.subject = (querySnapshot.data().subject)
-                    vakkenElement.field = (querySnapshot.data().field)
-                    //vakkenZelfde.push(vakkenElement)
-                    setVakkenZelfde(vakkenZelfde.concat(vakkenElement))
+                    console.log("vak met info", querySnapshot.data())
+                    vakkenElement.subject = querySnapshot.data().subject
+                    vakkenElement.field = querySnapshot.data().field
+                    vakkenElement.info_en = querySnapshot.data().info_en
+                    vakkenElement.info_nl = querySnapshot.data().info_nl
+                    console.log(vakkenElement)
+                    setVakkenZelfde(vakkenZelfde => vakkenZelfde.concat(vakkenElement))
+
                 })
+                // het vak toevoegen aan 'vakkenzelfde' element
+
+                    //vakkenZelfde.push(vakkenElement)
+                    //setVakkenZelfde(vakkenZelfde.concat(vakkenElement))
+                    // save all data of each user
+                    /*db.collection("users").where("uid", "==", docDataUid).get()
+                    .then((querySnapshot) => {
+                        querySnapshot.forEach((doc) => {
+                            // doc.data() is never undefined for query doc snapshots
+                            // console.log(doc.id, " => ", doc.data());
+                            var element = {}
+                            element.id = doc.id
+                    })})*/
+
+
+
+                
             }
         }
+        //const infoUserMatch = {}
+        //setInfoUserMatch()
+        //infoUserMatch.aantal = amountMatches
+        //infoUserMatch.vakkenZelfde = vakkenZelfde
+        //element.aantal = count
+
+        //setVakkenZelfde([])
+
         
     }
 
     const part4 = async () => {
+        console.log(amountMatches)
+        console.log(vakkenZelfde)
         if (amountMatches > 0){
             //aantalUsers++;
             setAmountUsers(amountUsers+1)
             // console.log("potentiële tutor met naam:" + doc.data().firstname )
             const data = []
             // save all data of each user
+            console.log(docDataUid)
             db.collection("users").where("uid", "==", docDataUid).get()
             .then((querySnapshot) => {
                 querySnapshot.forEach((doc) => {
@@ -199,7 +324,7 @@ export default function Match() {
                     element.vakkenZelfde = vakkenZelfde
                     element.price = doc.data().kost
                     element.distance = checkDistance(doc.data().latlng._lat,doc.data().latlng._long , latLoggedIn, lngLoggedIn) // hier eig met latLoggedIn en letLoggedIn
-                    console.log(element)
+                    //console.log(element)
                     data.push(element)
                 });
             })
@@ -207,7 +332,8 @@ export default function Match() {
                 // console.log("Error getting ddocumednts: ", error);
                 console.log("errorrr, not working")
             });
-            setMatches(data)
+            console.log(data)
+            setMatches(matches => matches.concat(data))
             console.log('match')
         }
         
@@ -310,16 +436,7 @@ export default function Match() {
                                 setMatches(data)
                                 console.log('match')
                             }
-                            /*db
-                            .collection("users").doc("CzNWACORe23csQjyNfYC")
-                            .get()
-                            .then((querySnapshot) => {  
-                                //setUserData(querySnapshot.data())
-                                console.log(querySnapshot.data())
-                                //userLat = querySnapshot.data().city._lat
-                                //userLong = querySnapshot.data().city._long
-                            })
-                            //const distance = getDistance({ latitude: doc.data().city._lat, longitude: doc.data().city._long },{ latitude: userLat, longitude: userLong })
+                            
                             
                         }
                     }
@@ -349,7 +466,11 @@ export default function Match() {
             <Button onClick={() => setFilter("ReviewWorseBest")}>Filter by reviews worse to best</Button>
 
                 <p>Matches willen niet printen, maar wel als je een filter instelt:</p>
-
+                {matches.length > 0 ?
+                    console.log(matches)
+                :
+                    console.log("no matches")
+                }
                 {matches && matches.map((item, index) => 
                 (
                     <>

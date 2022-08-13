@@ -3,6 +3,7 @@ import "firebase/compat/auth"
 import "firebase/compat/firestore"
 import "firebase/compat/storage"
 import { getAuth } from "firebase/auth";
+import {doc, updateDoc, deleteField} from "firebase/firestore"
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -88,7 +89,7 @@ const passwordResetLinkEmail = async (email) => {
 
 // USER DATA
 // add data of register form
-const addDataUser = async (email, userid, firstName, lastName, bijlesKrijgen, bijlesGeven, richting, geolocation, kost, birthday, avatar) => {
+const addDataUser = async (email, userid, firstName, lastName, bijlesKrijgen, bijlesGeven, richting, geolocation, kost, birthday, avatar, meetingMyAddress) => {
   try {
     let lat = 0
     let lng = 0
@@ -118,7 +119,8 @@ const addDataUser = async (email, userid, firstName, lastName, bijlesKrijgen, bi
       richting: richting,
       woonplaats: geolocation.description,
       latlng: coordinates,
-      birthday: birthday
+      birthday: birthday, 
+      meetingsAddress: meetingMyAddress
     }
 
     object.uid = userid
@@ -135,7 +137,7 @@ const addDataUser = async (email, userid, firstName, lastName, bijlesKrijgen, bi
     if (kost){
       object.kost = kost
     } 
-    await db.collection("users").add(object);
+    await db.collection("users").doc(userid).set(object);
 
   } catch (err) {
     console.error(err);
@@ -143,27 +145,14 @@ const addDataUser = async (email, userid, firstName, lastName, bijlesKrijgen, bi
   }
 }
 
-const showProfileData = async () => {
-  //let items = []
-
-  try { 
-    await db
-    .collection("users")
-    .where("uid", "==", "fOQq6zveL3g2oHO24GdSAEi8gWG3")
-    .get()
-    .then((querySnapshot) => { 
-      querySnapshot.forEach(function(doc) {
-        return doc.data().firstname
-    })
-  })
-  //return doc.data()
-
+const addKostUser = async (uid, kost) => {
+  try {
+    await db.collection("users").doc(uid).update({kost: kost});
   } catch (err) {
     console.error(err);
-    alert("An error occured while fetching user data");
   }
-
 }
+
 
 
 // AGENDA FUNCTIONALITIES
@@ -233,7 +222,11 @@ const editApp = async (todo, eventid) => {
 const getFieldsOfStudy = async() => {
   const data = []
   
-  await db.collection("course").get().then((querySnapshot) => {  //Notice the arrow funtion which bind `this` automatically.
+  await 
+  db
+  .collection("course")
+  .get()
+  .then((querySnapshot) => {  //Notice the arrow funtion which bind `this` automatically.
     querySnapshot.forEach(function(doc) {
       // * UPDATE DATA ARRAY 
       data.push(doc.data())
@@ -247,18 +240,45 @@ const getFieldsOfStudy = async() => {
 const getUserData = async(userid) => {
   let data 
 
-  await db
-  .collection("users")
-  .where("uid", "==", userid)
+
+  await db.collection("users")
+  .doc(userid)
   .get()
-  .then((querySnapshot) => { 
-    querySnapshot.forEach(function(doc) {
-      data = doc.data()
-    })
+  .then((querySnapshot) => {
+    data = querySnapshot.data()
   })
+
 
   return data
 };
+
+const changeTutoring = async(uid, toDo) => {
+  let objectChange = {}
+  let data 
+
+  if (toDo === "enableTutoring"){
+    objectChange.giveTutoring = []
+  } else if (toDo === "disableTutoring"){
+    objectChange.giveTutoring = deleteField()
+  } else if (toDo === "enableGettingTutored"){
+    objectChange.getTutoring = []
+  }else if (toDo === "disableGettingTutored"){ 
+    objectChange.getTutoring = deleteField()
+  }
+
+  await db.collection("users")
+  .doc(uid)
+  .update(objectChange)
+  .then(function(){
+    data = true
+  })
+  .catch(function(error){
+    data = false
+  })
+
+  return data
+
+}
 
 const getReviews = async(userid) => {
   let data = []
@@ -372,8 +392,6 @@ export {
     signInWithEmailAndPassword,
     registerWithEmailAndPassword,
     logout,
-    showProfileData,
-    //getCourses,
     addAfspraak,
     editApp,
     addDataUser,
@@ -382,5 +400,7 @@ export {
     passwordResetLinkEmail,
     getFieldsOfStudy,
     getUserData,
-    getReviews
+    getReviews,
+    changeTutoring,
+    addKostUser
   };

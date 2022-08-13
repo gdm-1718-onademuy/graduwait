@@ -92,7 +92,10 @@
         "9": "Nieuw wachtwoord",
         "10": "Herhaal wachtwoord",
         "11": "Recensies",
-        "12": "Verjaardag"
+        "12": "Verjaardag",
+        "13": "Tarief (max €20/u)",
+        "14": "Stel je tarief in, dit kan maximum €20/u zijn."
+
     },
     "Buttons": {
         "1": "Sla op",
@@ -100,7 +103,8 @@
         "3": "Wijzig profiel",
         "4": "Verander wachtoord",
         "5": "Sla veranderingen op",
-        "6": "Annuleer"
+        "6": "Annuleer",
+        "7": "Sla op en word bijlesgever"
     },
     "Match": {
         "1": "Afstand",
