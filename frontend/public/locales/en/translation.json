@@ -1,0 +1,111 @@
+{
+    "Menu": {
+        "1": "Dashboard",
+        "2": "My agenda",
+        "3": "Profile",
+        "4": "History",
+        "5": "Info"
+    },
+    "Dashboard": {
+        "1": "Current tutor session",
+        "2": "Unmastered subjects",
+        "3": "Mastered subjects",
+        "4": "Search subjects to add to your dashboard..",
+        "5": "No current session at this moment.",
+        "6": "Add subjects by typing in the searchbar.",
+        "7": "This function is not set. Do you want to set this up? Go to your profile.",
+        "8": "I master this subject",
+        "9": "Find the perfect match",
+        "10": "This subject has been successfully changed.",
+        "11": "Delete from my mastered subjects",
+        "12": "Delete from my unmastered subjects",
+        "13": "I need tutoring for this subject",
+        "14": "This subject has been successfully deleted from your dashboard"
+
+
+    },
+    "Info": {
+        "1": "Who are we",
+        "2": "Info about me.",
+        "3": "Our pricing",
+        "4": "How is the pricing working.",
+        "5": "Privacy policy",
+        "6": "Get all the GDPR and privacy terms.",
+        "7": "Contact",
+        "8": "Contact data for problems or questions."
+    },
+    "Agenda": {
+        "1": "Personal agenda",
+        "2": "Agenda of ",
+        "3": "Add availability",
+        "4": "Make an appointment",
+        "5": "Set your available hours",
+        "6": "Do you want to setup a scheme, so that people can only make an appointment on the available hours?"
+    },
+    "Weekdagen": {
+        "1": "Monday",
+        "2": "Tuesday",
+        "3": "Wednesday",
+        "4": "Thursday",
+        "5": "Friday",
+        "6": "Saturday",
+        "7": "Sunday"
+    },
+    "Legende": {
+        "1": "Give tutoring - appointment confirmed",
+        "2": "Give tutoring - appointment NOT confirmed",
+        "3": "Get tutoring - appointment confirmed",
+        "4": "Get tutoring - appointment NOT confirmed",
+        "5": "Legend"
+    },
+    "Afspraak": {
+        "1": "Appointment to get tutoring",
+        "2": "Tutor",
+        "3": "Date",
+        "4": "From",
+        "5": "To",
+        "6": "Subject(s)",
+        "7": "Cancel this appointment",
+        "8": "Appointment to give tutoring",
+        "9": "Confirm this appointment",
+        "10": "This appointment is confirmed by ",
+        "11": "you",
+        "12": "This appointment needs to be confirmed or cancelled by you",
+        "13": "This appointment needs to be confirmed by "
+
+    },
+    "Profile": {
+        "1": "Enable tutoring",
+        "2": "Enable getting tutored",
+        "3": "Disable tutoring",
+        "4": "Disable getting tutored"
+    },
+    "Userdata": {
+        "1": "First name",
+        "2": "Last name",
+        "3": "Email",
+        "4": "Address",
+        "5": "Field of study",
+        "6": "Rate",
+        "7": "Password",
+        "8": "Old password",
+        "9": "New password",
+        "10": "Repeat password",
+        "11": "Reviews",
+        "12": "Birthday"
+    },
+    "Buttons": {
+        "1": "Save",
+        "2": "Next",
+        "3": "Change profile",
+        "4": "Change password",
+        "5": "Save changes",
+        "6": "Cancel"
+    },
+    "Match": {
+        "1": "Distance",
+        "2": "km away",
+        "3": "per hour",
+        "4": "Book an appointment" 
+    }
+}
