@@ -361,6 +361,21 @@ const getMatchingUsers = (userid) => {
 }
 
 
+const getNameSubjectById = async (subjectid) => {
+
+  // * DATA ARRAY 
+  let data 
+  
+  await db.collection("subject")
+  .doc(subjectid)
+  .get()
+  .then((querySnapshot) => {
+    data = querySnapshot.data().subject
+  })
+
+  return data
+}
+
 const getDataF = async () => {
 
   // * DATA ARRAY 
@@ -432,7 +447,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
       } else { // de gegevens van de andere zijn agenda
         // als ingelogde user bijles krijgt van deze persoon, dit niet opslaan want w al gerenderd
         if (doc.data().studentid !== uid){
-          element.title = "" // geen titel, want "not available" gaat geprint worden
+          element.title = "NA" // geen titel, want "not available" gaat geprint worden
           element.display = 'background'
           element.editable = false
           element.color = "grey"
@@ -499,7 +514,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
         // als ingelogde user bijles geeft aan deze persoon, dit niet opslaan want w al gerenderd
         if (doc.data().tutorid !== uid){
           element.id = doc.id
-          element.title = "" //geen titel, want "not available" gaat geprint worden
+          element.title = "NA" //geen titel, want "not available" gaat geprint worden
           element.start = longstart
           element.end = longend
           element.isconfirmed = isconfirmed
@@ -533,6 +548,7 @@ export {
     db,
     storage,
     firebase,
+    getNameSubjectById,
     signInWithGoogle,
     signInWithEmailAndPassword,
     registerWithEmailAndPassword,

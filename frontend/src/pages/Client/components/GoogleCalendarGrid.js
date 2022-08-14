@@ -5,17 +5,20 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction" // needed for dayClick
 import { styled, Box } from '@mui/system';
 import ModalUnstyled from '@mui/base/ModalUnstyled';
-import { TextField, Grid, Modal, Button, Switch, FormControlLabel, Paper, Alert, Typography}  from '@mui/material';
+import { TextField, Checkbox, FormGroup, Grid, Modal, ButtonGroup, Button, Switch, FormControlLabel, Paper, Alert, Typography}  from '@mui/material';
 import Title from './Title';
 import {useTranslation} from 'react-i18next';
 import {
-  auth, editAppointment, getAppointmentsUser, getUserData
+  auth, editAppointment, getAppointmentsUser, getUserData, getNameSubjectById
 } from "../../../services/config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import './GoogleCalendar.scss';
 import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
@@ -111,11 +114,20 @@ export default function GoogleCalendarGrid(props) {
   const [userid, setUserid] = useState()
   const [otherIsTutor, setOtherIsTutor] = useState()
   const [otherIsTutee, setOtherIsTutee] = useState()
+  const [modalAppointment, setModalAppointment] = useState(false)
+  const [date, setDate] = useState()
+  const [starthour, setStarthour] = useState()
+  const [endhour, setEndhour] = useState()
+  const [subjects, setSubjects] = useState([])
+  const [ok, setOk] = useState(false)
+  const [opmerking, setOpmerking] = useState()
+  const [checkedVakken, setCheckedVakken] = useState()
+
 
   // modal
   const [open, setOpen] = useState(false);
   const handleOpen = (args) => {
-    if(args.event.title !== ""){
+    if(args.event.title !== "NA"){
       setAppointmentId(args.event.id)
       setOpen(true);
     }
@@ -127,7 +139,6 @@ export default function GoogleCalendarGrid(props) {
   useEffect( () => {
     //console.log(Object.keys(props).length === 0)
     if(Object.keys(props).length !== 0){
-      console.log(props)
       setPerson(props.person)
       setUserid(props.userid)
       setSubjectids(props.subjectids)
@@ -175,7 +186,6 @@ export default function GoogleCalendarGrid(props) {
   useEffect(async () => {
     //console.log(user)
     if (user){
-      console.log("events")
       const userData = await getUserData(user.uid)
       if (userData.getTutoring){
         setIsTutee(true)
@@ -192,12 +202,15 @@ export default function GoogleCalendarGrid(props) {
   }, [user]);
 
   useEffect(async () => {
+    console.log(subjectids)
+  }, [subjectids]);
+
+  useEffect(async () => {
     if (isTutor !== "" && isTutee !== ""){
       const eventsOfUser = await getAppointmentsUser(user.uid, isTutor, isTutee, "own")
       setEvents(eventsOfUser)
 
       if (!isOwnAgenda){
-        console.log(otherIsTutor, otherIsTutee, person, userid)
         const eventsOfOtherUser = await getAppointmentsUser(user.uid, otherIsTutor, otherIsTutee, userid)
         setEvents(events => events.concat(eventsOfOtherUser))
       }
@@ -216,10 +229,192 @@ export default function GoogleCalendarGrid(props) {
     console.log(response)
   }
 
+  const addAppointment = (arg) => {
+    console.log(arg)
+    const month = String(arg.date.getMonth() + 1).padStart(2, '0');
+    const day = String(arg.date.getDate()).padStart(2, '0')
+    setModalAppointment(true)
+    setOpen(true)
+
+    setDate(arg.date.getFullYear() + "-" + month + "-" + day)
+    setStarthour(String(arg.date.getHours()).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
+    setEndhour(String(arg.date.getHours()+1).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
+    console.log(month, day)
+
+    //handleOpen()
+  }
+
+  const aanvraagTutor = () => {
+    console.log("let's book")
+  }
+
   /*const showDetails = (arg) => {
     console.log(arg.event.id)     
     setPopUpDetail(true)
   }*/
+
+  const RequestAppointment = () => (
+    <>
+    <Title>{t('Agenda.4')}</Title>
+    <Grid container spacing={2} /*totaal is 12 bij xs*/> 
+      <Grid item xs={4}>  
+      {t('Afspraak.2')}
+      </Grid>
+
+      <Grid item xs={8}>  
+      {person}
+      </Grid>
+
+      <Grid item xs={4}>  
+      {t('Afspraak.3')}
+      </Grid>
+
+      <Grid item xs={8}>  
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <DesktopDatePicker
+            required
+            label={t('Afspraak.3')}
+            inputFormat="dd/MM/yyyy"
+            //maxDate={birthdaysHighschool}
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            renderInput={(params) => <TextField fullWidth {...params} />}
+          />
+        </LocalizationProvider>
+      </Grid>
+
+      <Grid item xs={4}>  
+      {t('Afspraak.4')}
+      </Grid>
+      
+      <Grid item xs={8}>  
+        <TextField
+          required
+          id="time"
+          label="From"
+          type="time"
+          name="from"
+          readonly='true'
+          onChange={(e) => 
+              setStarthour(e.target.value)
+          }
+          InputLabelProps={{
+          shrink: true,
+          }}
+          inputProps={{
+          step: 300, // 5 min
+          }}
+          fullWidth
+          //defaultValue="08:00"
+          value={starthour}
+          InputProps={{inputProps: { min: "09:00" }}}
+
+        />
+    </Grid>
+
+
+      <Grid item xs={4}>  
+      {t('Afspraak.5')}
+      </Grid>
+      
+      <Grid item xs={8}>
+        <TextField
+          id="time"
+          label="To"
+          type="time"
+          name="from"
+          fullWidth
+          disabled
+          //defaultValue={schema[number]}
+          onChange={(e) => 
+              setEndhour(e.target.value)
+            }
+          InputLabelProps={{
+          shrink: true,
+          }}
+          inputProps={{
+          step: 300, // 5 min
+          }}
+          value={endhour}
+      />
+      </Grid>
+
+      <Grid item xs={4}>  
+          {t('Afspraak.14')}
+      </Grid>
+      <Grid item xs={8}>  
+          
+      </Grid>
+
+      <Grid item xs={5}>
+          </Grid>
+
+          <Grid item xs={4}>  
+          {t('Afspraak.6')}
+          </Grid>
+
+            { subjectids.length > 1 ? 
+
+               <Grid item xs={8}>
+                <FormGroup>
+                {subjectids.map((item, index) => (
+                  <FormControlLabel control={
+                  <Checkbox 
+                    //id={item.subjectid}
+                    id={item.subjectid}
+                    //checked={checked[item.subjectid]}
+                    //checked={checked[item]}
+                    //checked={item}
+                    onChange={() => setCheckedVakken({
+                      ...checkedVakken,
+                      [index]: item,
+                    })}
+                    defaultChecked />
+                  } 
+                  label={item.subject} />
+                ))}
+              </FormGroup>
+              </Grid>
+              :
+              <Grid item xs={8}>
+             <FormControlLabel control={<Checkbox disabled checked />} label={subjectids[0].subject} />
+              </Grid>
+            }
+          
+          <Grid item xs={4}>  
+          Voeg een opmerking toe
+          </Grid>
+
+          <Grid item xs={8}>
+            <TextField
+              id="text"
+              type="textarea"
+              name="text"
+              multiline
+              //defaultValue={schema[number]}
+              InputLabelProps={{
+              shrink: true,
+              }}
+              fullWidth
+              onChange={(e) => setOpmerking(e.target.value)}
+              //sx={{ width: 1000 }}
+          />
+          </Grid>
+    </Grid>
+    <Box component="form" onSubmit={aanvraagTutor} noValidate sx={{ mt: 1 }}>
+    <Button
+      type="submit"
+      fullWidth
+      variant="contained"
+      sx={{ mt: 3, mb: 2 }}
+      onClick={() => aanvraagTutor}
+    >
+      Boek deze afspraak
+    </Button>
+    </Box>
+  </>
+
+  )
 
   const DataEvent = () => (
     <>
@@ -337,6 +532,7 @@ export default function GoogleCalendarGrid(props) {
       }}
       //businessHours={vrijeTijd}  
       events={events}
+      dateClick={addAppointment}
       />
       :
       <p>Loading</p>
@@ -350,7 +546,11 @@ export default function GoogleCalendarGrid(props) {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
+          {modalAppointment?
+          <RequestAppointment/>
+          :
           <DataEvent/>
+          }
         </Box>
       </Modal>
   

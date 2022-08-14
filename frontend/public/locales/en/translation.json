@@ -38,9 +38,10 @@
         "1": "Personal agenda",
         "2": "Agenda of ",
         "3": "Add availability",
-        "4": "Make an appointment",
+        "4": "Request an appointment",
         "5": "Set your available hours",
         "6": "Do you want to setup a scheme, so that people can only make an appointment on the available hours?"
+
     },
     "Weekdagen": {
         "1": "Monday",
@@ -72,7 +73,8 @@
         "11": "you",
         "12": "This appointment needs to be confirmed or cancelled by you",
         "13": "This appointment needs to be confirmed by ",
-        "14": "Location"
+        "14": "Location",
+        "15": "Add a comment"
 
     },
     "Profile": {

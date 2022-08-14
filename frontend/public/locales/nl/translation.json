@@ -37,7 +37,7 @@
         "1": "Persoonlijke agenda",
         "2": "Agenda van ",
         "3": "Voeg beschikbaarheid toe",
-        "4": "Maak een afspraak",
+        "4": "Vraag een afspraak aan",
         "5": "Stel beschikbare tijd in",
         "6": "Wil je een tijdschema instellen zodat enkel op deze vrije momenten kan ingeboekt worden?"
 
@@ -73,7 +73,8 @@
         "11": "jou",
         "12": "Deze afspraak moet bevestigd of geannuleerd woroden door jou",
         "13": "Deze afspraak moet bevestigd worden door ",
-        "14": "Locatie"
+        "14": "Locatie",
+        "15": "Opmerking"
 
     },
     "Profile": {

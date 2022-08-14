@@ -508,7 +508,7 @@ export default function Match() {
                         </Grid>
       
                             <br />
-                        <Button onClick={() => goToAgenda("3mBoKVVbTAXyS4zgvm7pqQwsW9x1", "Olivier Huyse", ["LxcRRiHQhht0Aj5YRdvQ", "8WZvrVMNbqC1EvNPBTsy"], true /*isTutor*/, false /*istutee*/)}>Boek een afspraak</Button>
+                        <Button onClick={() => goToAgenda("3mBoKVVbTAXyS4zgvm7pqQwsW9x1", "Olivier Huyse", [{subjectid:"LxcRRiHQhht0Aj5YRdvQ", subject: "Javascript", field: "Development"}, {subjectid: "8WZvrVMNbqC1EvNPBTsy", subject: "PHP", field:"Development"}], true /*isTutor*/, false /*istutee*/)}>Boek een afspraak</Button>
                     </Grid>
                 </Grid>
 
