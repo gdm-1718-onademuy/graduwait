@@ -117,10 +117,6 @@ function UserProfile() {
   }, [refresh])
 
 
-  // change birthday
-  const changeBirthday = (newBirthday) => {
-    setBirthday(newBirthday);
-  };
 
   const GOOGLE_MAPS_API_KEY = process.env.REACT_APP_GOOGLE_API_KEY
 
@@ -188,7 +184,7 @@ function UserProfile() {
       setLocatie(userData.woonplaats)
       setAvatar(userData.avatar)
       setRichting(userData.richting)
-      setBirthday(userData.birthday)
+      setBirthday(userData.birthday.toDate().toISOString().split('T')[0])
       setBirthdayToShow(userData.birthday.toDate().toISOString().split('T')[0])
       if (userData.getTutoring){
         setIsTutee(true)
@@ -507,8 +503,8 @@ function UserProfile() {
     )
   }
 
-  const EditGegevensUser = () => {
-    return (
+  const EditGegevensUser = () => (
+
     <>
     <Box component="form" noValidate autoComplete="off" sx={{ mt: 3 }}>
             <Grid container spacing={2}>
@@ -556,6 +552,7 @@ function UserProfile() {
                 <p>{t('Userdata.12')}</p>
               </Grid>
               <Grid item xs={12} sm={8}>
+                
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     required
@@ -563,7 +560,7 @@ function UserProfile() {
                     inputFormat="dd/MM/yyyy"
                     maxDate={birthdaysHighschool}
                     value={birthday}
-                    onChange={changeBirthday}
+                    onChange={(e) => setBirthday(e)}
                     renderInput={(params) => <TextField fullWidth {...params} />}
                   />
                 </LocalizationProvider>
@@ -723,7 +720,7 @@ function UserProfile() {
             </Grid>
           </Box>
     </>
-  )}
+  )
 
   const GegevensUser = () => (
     <>

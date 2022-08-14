@@ -194,6 +194,7 @@ export default function GoogleCalendarGrid(props) {
       const userData = await getUserData(user.uid)
       if(userData.meetingsAddress){
         const checkLabel = obj => obj.label === 'tutee'
+        console.log(!possibleLocations.some(checkLabel))
         if(!possibleLocations.some(checkLabel)){
           setPossibleLocations(possibleLocations => possibleLocations.concat({label:t('Afspraak.16'), value:"tutee"}))
         }
@@ -237,6 +238,8 @@ export default function GoogleCalendarGrid(props) {
       const userData = await getUserData(userid)
       if(userData.meetingsAddress){
         const checkLabel = obj => obj.label === 'tutor'
+        console.log(!possibleLocations.some(checkLabel))
+
         if(!possibleLocations.some(checkLabel)){
           setPossibleLocations(possibleLocations => possibleLocations.concat({label:t('Afspraak.17'), value:"tutor"}))
         }
@@ -300,6 +303,8 @@ export default function GoogleCalendarGrid(props) {
     });
   };
 
+
+
   /*const showDetails = (arg) => {
     console.log(arg.event.id)     
     setPopUpDetail(true)
@@ -330,7 +335,7 @@ export default function GoogleCalendarGrid(props) {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DesktopDatePicker
             required
-            label={t('Afspraak.3')}
+
             inputFormat="dd/MM/yyyy"
             value={date}
             onChange={(e) => setDate(e)}
@@ -425,33 +430,9 @@ export default function GoogleCalendarGrid(props) {
                   <FormControlLabel control={
                   <Checkbox 
                     id={item.subjectid}
-                    //checked={checkedVakken[index]}
-                    //checked={checked[item.subjectid]}
-                    //checked={checked[item]}
-                    //checked={checkedVakken[item.subjectid]}
-                    //checked={}
                     checked={checkedVakken[item.subjectid]}
                     onChange={handleChange}
                     defaultChecked
-
-                    //checked={checkedVakken[index]}
-                    /*onChange={(e) => {
-                      console.log(e)
-                      setCheckedVakken({
-                      ...checkedVakken,
-                      [index]: e.target
-                    })*/
-
-                      
-                      /*setCheckedVakken((e) => ({
-                      ...checkedVakken,
-                      [index]: e.target
-                    }))}*/
-
-                    /*onChange={() => setCheckedVakken({
-                      ...checkedVakken,
-                      [index]: item,
-                    })}*/
                     />
                   } 
                   label={item.subject} />
@@ -474,14 +455,12 @@ export default function GoogleCalendarGrid(props) {
               type="textarea"
               name="text"
               multiline
-              //defaultValue={schema[number]}
-              InputLabelProps={{
-              shrink: true,
-              }}
               fullWidth
+              value={opmerking}
               onChange={(e) => setOpmerking(e.target.value)}
+              //onChange={(e) => setOpmerking(e.target.value)}
               //sx={{ width: 1000 }}
-          />
+            />
           </Grid>
     </Grid>
     <Box component="form" onSubmit={aanvraagTutor} noValidate sx={{ mt: 1 }}>
@@ -630,7 +609,170 @@ export default function GoogleCalendarGrid(props) {
       >
         <Box sx={style}>
           {modalAppointment?
-          <RequestAppointment/>
+             <>
+             {errorForm &&
+              <Grid item xs={12} >
+                <Alert severity="error">{errorForm}</Alert>
+              </Grid>
+             }
+            <Title>{t('Agenda.4')}</Title>
+            <Grid container spacing={2} /*totaal is 12 bij xs*/> 
+              <Grid item xs={4}>  
+              {t('Afspraak.2')}
+              </Grid>
+        
+              <Grid item xs={8}>  
+              {person}
+              </Grid>
+        
+              <Grid item xs={4}>  
+              {t('Afspraak.3')}
+              </Grid>
+        
+              <Grid item xs={8}>  
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DesktopDatePicker
+                    required
+        
+                    inputFormat="dd/MM/yyyy"
+                    value={date}
+                    onChange={(e) => setDate(e)}
+                    minDate={minDate}
+                    renderInput={(params) => <TextField fullWidth {...params} />}
+                  />
+                </LocalizationProvider>
+              </Grid>
+        
+              <Grid item xs={4}>  
+              {t('Afspraak.4')}
+              </Grid>
+              
+              <Grid item xs={8}>  
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <TimePicker
+                  renderInput={(params) => <TextField {...params} />}
+                  label={t('Afspraak.4')}
+                  value={starthour}
+                  minTime={new Date(0, 0, 0, 8)}
+                  maxTime={new Date(0, 0, 0, 18, 45)}
+                  onChange={(e) => {
+                    setStarthour(e);
+                  }}
+                  shouldDisableTime={(timeValue, clockType) => {
+                    if (clockType === 'minutes' && timeValue % 30) {
+                      return true;
+                    }
+                    return false;
+                  }}
+                />
+              </LocalizationProvider>
+            </Grid>
+        
+        
+              <Grid item xs={4}>  
+              {t('Afspraak.5')}
+              </Grid>
+              
+              <Grid item xs={8}>
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <TimePicker
+                  renderInput={(params) => <TextField {...params} />}
+                  label={t('Afspraak.5')}
+                  value={endhour}
+                  minTime={new Date(0, 0, 0, 8)}
+                  maxTime={new Date(0, 0, 0, 18, 45)}
+                  onChange={(e) => {
+                    setEndhour(e);
+                  }}
+                  shouldDisableTime={(timeValue, clockType) => {
+                    if (clockType === 'minutes' && timeValue % 30) {
+                      return true;
+                    }
+                    return false;
+                  }}
+                />
+              </LocalizationProvider>
+              </Grid>
+        
+              <Grid item xs={4}>  
+                  {t('Afspraak.14')}
+              </Grid>
+              <Grid item xs={8}>  
+                  <Select 
+                  id="demo-simple-select"
+                  fullWidth
+                  onChange={(e)=>setLocation(e.target.value)}
+                  label={t('Afspraak.14')}
+                  value={location}>
+                {possibleLocations?.map(possible => {
+                    return (
+                      <MenuItem key={possible.value} value={possible.value}>
+                        {possible.label ?? possible.value}
+                      </MenuItem>
+                    );
+                })}
+              </Select>
+              </Grid>
+        
+                  <Grid item xs={4}>  
+                  {t('Afspraak.6')}
+                  </Grid>
+        
+                    { subjectids.length > 1 ? 
+        
+                       <Grid item xs={8}>
+                        <FormGroup>
+                        {subjectids.map((item, index) => (
+                          
+        
+                          <FormControlLabel control={
+                          <Checkbox 
+                            id={item.subjectid}
+                            checked={checkedVakken[item.subjectid]}
+                            onChange={handleChange}
+                            defaultChecked
+                            />
+                          } 
+                          label={item.subject} />
+                        ))}
+                      </FormGroup>
+                      </Grid>
+                      :
+                      <Grid item xs={8}>
+                     <FormControlLabel control={<Checkbox disabled checked />} label={subjectids[0].subject} />
+                      </Grid>
+                    }
+                  
+                  <Grid item xs={4}>  
+                  {t('Afspraak.15')}
+                  </Grid>
+        
+                  <Grid item xs={8}>
+                    <TextField
+                      id="text"
+                      type="textarea"
+                      name="text"
+                      multiline
+                      fullWidth
+                      value={opmerking}
+                      onChange={(e) => setOpmerking(e.target.value)}
+                      //onChange={(e) => setOpmerking(e.target.value)}
+                      //sx={{ width: 1000 }}
+                    />
+                  </Grid>
+            </Grid>
+            <Box component="form" onSubmit={aanvraagTutor} noValidate sx={{ mt: 1 }}>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={() => aanvraagTutor}
+            >
+              {t('Afspraak.18')}
+            </Button>
+            </Box>
+          </>
           :
           <DataEvent/>
           }

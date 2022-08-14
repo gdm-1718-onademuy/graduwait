@@ -38,7 +38,7 @@
         "1": "Personal agenda",
         "2": "Agenda of ",
         "3": "Add availability",
-        "4": "Request an appointment",
+        "4": "Schedule an appointment",
         "5": "Set your available hours",
         "6": "Do you want to setup a scheme, so that people can only make an appointment on the available hours?"
 
@@ -77,7 +77,7 @@
         "15": "Add a comment",
         "16": "Tutor's place",
         "17": "My place",
-        "18": "Request this tutoring"
+        "18": "Schedule this appointment"
 
     },
     "Profile": {
