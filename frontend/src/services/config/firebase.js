@@ -240,7 +240,6 @@ const getFieldsOfStudy = async() => {
 const getUserData = async(userid) => {
   let data 
 
-
   await db.collection("users")
   .doc(userid)
   .get()
@@ -382,6 +381,82 @@ const getDataF = async () => {
   return data
 }
 
+const getAppointmentsUser = async (uid, isTutor, isTutee) => {
+
+  // * DATA ARRAY 
+  const data = []
+  
+  if (isTutor){
+  // hier alle appointments halen als user tutored
+  await db.collection("tutoring")
+  .where("tutorid", "==", uid)
+  .get()
+  .then((querySnapshot) => { 
+    querySnapshot.forEach(function(doc) {
+      // * UPDATE DATA ARRAY 
+      const element = {}
+      const longstart = doc.data().date + "T" + doc.data().starthour
+      const longend = doc.data().date + "T" + doc.data().endhour
+
+      // use these variables for the colors
+      const isconfirmed = doc.data().isconfirmed
+
+      element.id = doc.id
+      element.title = "bijles geven" //doc.data().title
+      element.start = longstart
+      element.end = longend
+      element.isconfirmed = isconfirmed
+      element.subjects = doc.data().subjectid
+
+      // color blue for TUTORING
+      if(isconfirmed){
+        element.color = '#00008b'
+      } else {
+        element.color = '#add8e6'
+      }
+      data.push(element)
+      //data = doc.data()
+    })
+  })
+  }
+
+  if (isTutee){
+  // hier als mens wordt getutored
+  await db.collection("tutoring")
+  .where("studentid", "==", uid)
+  .get()
+  .then((querySnapshot) => { 
+    querySnapshot.forEach(function(doc) {
+      // * UPDATE DATA ARRAY 
+      const element = {}
+      const longstart = doc.data().date + "T" + doc.data().starthour
+      const longend = doc.data().date + "T" + doc.data().endhour
+
+      // use these variables for the colors
+      const isconfirmed = doc.data().isconfirmed
+
+      element.id = doc.id
+      element.title = "bijles krijgen" //doc.data().title
+      element.start = longstart
+      element.end = longend
+      element.isconfirmed = isconfirmed
+      element.subjects = doc.data().subjectid
+
+      // color purple for TUTORING
+      if(isconfirmed){
+        element.color = '#301934'
+      } else {
+        element.color = '#CBC3E3'
+      }
+      data.push(element)
+      //data = doc.data()
+    })
+  })
+  }
+
+  return data
+}
+
 // export alle functies
 export {
     auth,
@@ -402,5 +477,6 @@ export {
     getUserData,
     getReviews,
     changeTutoring,
-    addKostUser
+    addKostUser,
+    getAppointmentsUser
   };

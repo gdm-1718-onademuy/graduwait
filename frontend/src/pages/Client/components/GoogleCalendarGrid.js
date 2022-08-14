@@ -9,13 +9,14 @@ import { TextField, Grid, Modal, Button, Switch, FormControlLabel, Paper, Alert,
 import Title from './Title';
 import {useTranslation} from 'react-i18next';
 import {
-  auth,db,editApp
+  auth,db,editApp, getAppointmentsUser, getUserData
 } from "../../../services/config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloseIcon from '@mui/icons-material/Close';
 import './GoogleCalendar.scss';
 import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
+
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -45,13 +46,22 @@ const Backdrop = styled('div')`
 `;
 
 const style = {
-  width: 600,
+  /*width: 600,
   height: '90vh',
   bgcolor: 'white',
   border: '2px solid white',
   p: 2,
   px: 4,
-  pb: 3,
+  pb: 3,*/
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'white',
+  border: '2px solid white',
+  boxShadow: 24,
+  p: 4,
 };
 
 //import googleCalendarPlugin from '@fullcalendar/google-calendar' // a plugin!
@@ -80,10 +90,8 @@ export default function GoogleCalendarGrid() {
   const API_KEY = process.env.REACT_APP_GOOGLE_API_KEY
   var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"]
   var SCOPES = "https://www.googleapis.com/auth/calendar.events"
-  const [open, setOpen] = React.useState(false);
   const [openEvent, setOpenEvent] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { t } = useTranslation()
@@ -98,22 +106,88 @@ export default function GoogleCalendarGrid() {
   const [fullname, setFullname] = useState()
   const [firstname, setFirstname] = useState()
   const [vakken, setVakken] = useState([])
+  const [isTutor, setIsTutor] = useState(false)
+  const [isTutee, setIsTutee] = useState(false)
+  const [popUpDetail, setPopUpDetail] = useState(false)
+  const [appointmentId, setAppointmentId] = useState("")
+  const [appointmentDetails, setAppointmentDetails] = useState()
+
+  // modal
+  const [open, setOpen] = useState(false);
+  const handleOpen = (args) => {
+    setAppointmentId(args.event.id)
+    setOpen(true);
+  }
+  const handleClose = () => setOpen(false);
 
 
-  const [checked, setChecked] = useState({
-    monday: false,
-    tuesday: false,
-    wednesday: false,
-    thursday: false,
-    friday: false,
-    saturday: false,
-    sunday: false
-  })
+  useEffect(async () => {
+    if (appointmentId !== ""){
+      const detailData = await events.find(event => {
+        return event.id === appointmentId
+      })
+      setAppointmentDetails(detailData)
+      /*var result = events.filter(event => {
+        return event.id === appointmentId
+      })*/
+    }
+  }, [appointmentId]);
+
+  useEffect(async () => {
+    if (user){
+      const userData = await getUserData(user.uid)
+      if (userData.getTutoring){
+        setIsTutee(true)
+      }
+      if (userData.giveTutoring){
+        setIsTutor(true)
+      }
+      const eventsOfUser = await getAppointmentsUser(user.uid, isTutee, isTutor)
+      setEvents(eventsOfUser)
+      console.log(eventsOfUser)
+    }
+  }, [user]);
+
+  /*const showDetails = (arg) => {
+    console.log(arg.event.id)
+    setPopUpDetail(true)
+  }*/
+
+  const DataEvent = () => (
+    <>
+    
+    {console.log(appointmentId)}
+
+    <Grid  container spacing={2} /*totaal is 12 bij xs*/> 
+    <Grid item justify="flex-end" xs={12}>  
+    </Grid>
+    <Grid item xs={12}>  
+    <Grid item xs={12}>  
+   
+        <Title>{t('Afspraak.8')}</Title>
+        <Title>{t('Afspraak.1')}</Title>
+    </Grid>
+    
+            <Alert severity="success">{t('Afspraak.10')}{t('Afspraak.11')}</Alert>
+            <Alert severity="success">{t('Afspraak.10')}{firstname}</Alert>
+
+            <Alert severity="warning">{t('Afspraak.12')}</Alert>
+
+            <Alert severity="warning">{t('Afspraak.13')}{firstname}</Alert>
+    </Grid>
+
+          <Grid item xs={12}>
+           <Button variant="outlined" fullWidth color="error" startIcon={<DeleteIcon />} /*onClick={deleteApp}*/>{t('Afspraak.7')}</Button>
+           </Grid>
+    </Grid>
+   </>
+      
+  )
 
   return (
     <>
         <Grid container spacing={3}>
-            <Grid  item xs={12} md={8} lg={12}>
+            <Grid  item xs={12} >
             <Paper sx={{ 
                           p: 2, 
                           display: 'flex', 
@@ -127,8 +201,9 @@ export default function GoogleCalendarGrid() {
       plugins={[ dayGridPlugin, interactionPlugin, timeGridPlugin ]}
       initialView="dayGridMonth"
       weekends={true}
+      //dateClick={}
       //dateClick={handleDateClick}
-      //eventClick={showDetails}
+      eventClick={handleOpen}
       headerToolbar={{
         left: 'prev,next today',
         center: 'title',
@@ -141,6 +216,17 @@ export default function GoogleCalendarGrid() {
       </Paper>
       </Grid>
       </Grid>
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <DataEvent/>
+        </Box>
+      </Modal>
   
       
   </>
