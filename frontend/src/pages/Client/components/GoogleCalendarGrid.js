@@ -3,26 +3,19 @@ import FullCalendar from '@fullcalendar/react' // must go before plugins
 import dayGridPlugin from '@fullcalendar/daygrid' 
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction" // needed for dayClick
-import Button from '@mui/material/Button';
 import { styled, Box } from '@mui/system';
 import ModalUnstyled from '@mui/base/ModalUnstyled';
-import TextField from '@mui/material/TextField';
-import Grid from '@mui/material/Grid';
+import { TextField, Grid, Modal, Button, Switch, FormControlLabel, Paper, Alert, Typography}  from '@mui/material';
 import Title from './Title';
 import {useTranslation} from 'react-i18next';
-import Switch from '@mui/material/Switch';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import {
   auth,db,editApp
 } from "../../../services/config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Paper from '@mui/material/Paper';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Alert from '@mui/material/Alert';
 import CloseIcon from '@mui/icons-material/Close';
 import './GoogleCalendar.scss';
 import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
-import Typography from '@mui/material/Typography';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -117,9 +110,39 @@ export default function GoogleCalendarGrid() {
     sunday: false
   })
 
-  return(
-    <>Hey</>
-  )
-
+  return (
+    <>
+        <Grid container spacing={3}>
+            <Grid  item xs={12} md={8} lg={12}>
+            <Paper sx={{ 
+                          p: 2, 
+                          display: 'flex', 
+                          flexDirection: 'column',
+                          height:'80vh',
+                          overflow: 'auto'
+                        }}>
+     <Title>{t('Agenda.1')} </Title>
+  
+      <FullCalendar 
+      plugins={[ dayGridPlugin, interactionPlugin, timeGridPlugin ]}
+      initialView="dayGridMonth"
+      weekends={true}
+      //dateClick={handleDateClick}
+      //eventClick={showDetails}
+      headerToolbar={{
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek'
+      }}
+      //businessHours={vrijeTijd}  
+      events={events}
+  
+      />
+      </Paper>
+      </Grid>
+      </Grid>
+  
+      
+  </>
+  );
 }
-
