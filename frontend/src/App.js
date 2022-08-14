@@ -35,7 +35,7 @@ function App() {
 
 
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route exact path="/agenda/:id" element={<Agenda/>} />
+        <Route exact path="/agenda/:id" element={<MyAgenda/>} />
         {/*Route exact path="/myagenda/:afspraakid" element={<MyAgenda />}*/}
         <Route exact path="/myagenda" element={<MyAgenda />} />
         <Route path="/history" element={<History />} />

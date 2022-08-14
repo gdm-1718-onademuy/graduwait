@@ -72,7 +72,9 @@
         "10": "Deze afspraak is bevestigd door",
         "11": "jou",
         "12": "Deze afspraak moet bevestigd of geannuleerd woroden door jou",
-        "13": "Deze afspraak moet bevestigd worden door "
+        "13": "Deze afspraak moet bevestigd worden door ",
+        "14": "Locatie"
+
     },
     "Profile": {
         "1": "Bijles geven inschakelen",

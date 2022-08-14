@@ -104,6 +104,7 @@ export default function GoogleCalendarGrid() {
   const [popUpDetail, setPopUpDetail] = useState(false)
   const [appointmentId, setAppointmentId] = useState("")
   const [appointmentDetails, setAppointmentDetails] = useState()
+  const [showAgenda, setShowAgenda] = useState(false)
 
   // modal
   const [open, setOpen] = useState(false);
@@ -175,6 +176,10 @@ export default function GoogleCalendarGrid() {
       setEvents(eventsOfUser)
     }
   }, [isTutee, isTutor]);
+
+  useEffect(async () => {
+    setShowAgenda(true)
+  }, [events]);
 
   const changeStatusAppointment = async (status) => {
     //console.log(status)
@@ -282,18 +287,10 @@ export default function GoogleCalendarGrid() {
 
   return (
     <>
-        <Grid container spacing={3}>
-            <Grid  item xs={12} >
-            <Paper sx={{ 
-                          p: 2, 
-                          display: 'flex', 
-                          flexDirection: 'column',
-                          height:'80vh',
-                          overflow: 'auto'
-                        }}>
+
      <Title>{t('Agenda.1')} </Title>
      
-      {events ?
+      {showAgenda ?
       <FullCalendar 
       plugins={[ dayGridPlugin, interactionPlugin, timeGridPlugin ]}
       initialView="dayGridMonth"
@@ -312,9 +309,7 @@ export default function GoogleCalendarGrid() {
       :
       <p>Loading</p>
       }
-      </Paper>
-      </Grid>
-      </Grid>
+   
 
       <Modal
         open={open}

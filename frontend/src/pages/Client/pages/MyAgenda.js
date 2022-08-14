@@ -1,23 +1,30 @@
-import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router";
 import "./Agenda.scss";
 import { auth, db } from "../../../services/config/firebase";
 import LoggedIn from "../../auth/components/LoggedIn";
 import GoogleCalendarGrid from "../components/GoogleCalendarGrid";
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import CssBaseline from '@mui/material/CssBaseline';
+import {Box, Grid, Paper, Container, CssBaseline } from '@mui/material';
 import Scheduler from "../components/Scheduler";
 
 export default function MyAgenda() {
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
   //const { afspraakid } = useParams(); 
+  const location = useLocation(); 
+  const [userid, setUserid] = useState();
+  const [name, setName] = useState("");
+  const [subjectids, setSubjectids] = useState("");
 
   useEffect(() => {
     //getDataUser()
+    /*if (location){
+      setName(location.state.name)
+      setUserid(location.state.userid)
+      setSubjectids(location.state.subjectids)
+    }*/
     if (loading) return;
     if (!user) return navigate("/");
   }, [user, loading]);
@@ -40,7 +47,19 @@ export default function MyAgenda() {
           }}
         >
       <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Grid container spacing={3}>
+            <Grid  item xs={12} >
+            <Paper sx={{ 
+                          p: 2, 
+                          display: 'flex', 
+                          flexDirection: 'column',
+                          height:'80vh',
+                          overflow: 'auto'
+                        }}>
         <GoogleCalendarGrid /*afspraakid={afspraakid}*/ />
+        </Paper>
+      </Grid>
+      </Grid>
       </Container>
     </Box>
     </Box>
