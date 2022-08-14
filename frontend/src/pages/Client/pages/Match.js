@@ -324,6 +324,7 @@ export default function Match() {
                     element.vakkenZelfde = vakkenZelfde
                     element.price = doc.data().kost
                     element.distance = checkDistance(doc.data().latlng._lat,doc.data().latlng._long , latLoggedIn, lngLoggedIn) // hier eig met latLoggedIn en letLoggedIn
+                    element.distanceInKm = Math.round(element.distance *100) /100 
                     //console.log(element)
                     data.push(element)
                 });

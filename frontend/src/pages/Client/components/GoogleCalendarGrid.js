@@ -46,13 +46,6 @@ const Backdrop = styled('div')`
 `;
 
 const style = {
-  /*width: 600,
-  height: '90vh',
-  bgcolor: 'white',
-  border: '2px solid white',
-  p: 2,
-  px: 4,
-  pb: 3,*/
   position: 'absolute',
   top: '50%',
   left: '50%',

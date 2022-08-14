@@ -10,7 +10,8 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Scheduler from "../components/Scheduler";
- 
+import { checkDistance } from "../../../services/functions/matching";
+
 export default function MyAgenda() {
   const [user, loading, error] = useAuthState(auth);
   const navigate = useNavigate();
