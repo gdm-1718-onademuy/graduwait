@@ -137,7 +137,7 @@ export default function GoogleCalendarGrid() {
       }
       const eventsOfUser = await getAppointmentsUser(user.uid, isTutee, isTutor)
       setEvents(eventsOfUser)
-      console.log(eventsOfUser)
+      //console.log(eventsOfUser)
     }
   }, [user]);
 

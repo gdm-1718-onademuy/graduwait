@@ -23,11 +23,11 @@ const Navbar = ({toggle}) => {
             </NavLink>
             <Bars onClick={toggle} />
             <NavMenu>
-            <NavLink to="/dashboard" activeStyle>{t('Menu.1')}</NavLink>
-                <NavLink to="/myagenda" activeStyle>{t('Menu.2')}</NavLink>
-                <NavLink to="/profile" activeStyle>{t('Menu.3')}</NavLink>
-                <NavLink to="/history" activeStyle>{t('Menu.4')}</NavLink>
-                <NavLink to="/info" activeStyle>{t('Menu.5')}</NavLink>
+            <NavLink to="/dashboard" >{t('Menu.1')}</NavLink>
+                <NavLink to="/myagenda" >{t('Menu.2')}</NavLink>
+                <NavLink to="/profile" >{t('Menu.3')}</NavLink>
+                <NavLink to="/history" >{t('Menu.4')}</NavLink>
+                <NavLink to="/info" >{t('Menu.5')}</NavLink>
                 <ButtonGroup variant="text" aria-label="outlined primary button group">
                     <Button style={{
                   backgroundColor: 'black',
