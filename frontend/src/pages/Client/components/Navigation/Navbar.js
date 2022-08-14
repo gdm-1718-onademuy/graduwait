@@ -24,7 +24,7 @@ const Navbar = ({toggle}) => {
             <Bars onClick={toggle} />
             <NavMenu>
             <NavLink to="/dashboard" activeStyle>{t('Menu.1')}</NavLink>
-                <NavLink to="/myagenda/me" activeStyle>{t('Menu.2')}</NavLink>
+                <NavLink to="/myagenda" activeStyle>{t('Menu.2')}</NavLink>
                 <NavLink to="/profile" activeStyle>{t('Menu.3')}</NavLink>
                 <NavLink to="/history" activeStyle>{t('Menu.4')}</NavLink>
                 <NavLink to="/info" activeStyle>{t('Menu.5')}</NavLink>

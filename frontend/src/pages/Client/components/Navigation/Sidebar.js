@@ -15,7 +15,7 @@ const Sidebar = ({isOpen, toggle}) => {
             <SidebarWrapper>
                 <SidebarMenu>
                     <SidebarLink to="/dashboard" onClick={toggle}>Dashboard</SidebarLink>
-                    <SidebarLink to="/myagenda/me" onClick={toggle}>My agenda</SidebarLink>
+                    <SidebarLink to="/myagenda" onClick={toggle}>My agenda</SidebarLink>
                     <SidebarLink to="/profile" onClick={toggle}>Profile</SidebarLink>
                     <SidebarLink to="/history" onClick={toggle}>History</SidebarLink>
                     <SidebarLink to="/info" onClick={toggle}>Info</SidebarLink>
