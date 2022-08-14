@@ -75,11 +75,11 @@ export default function Match() {
         // dit rerenderen?
     },[filter]);
 
-    const goToAgenda = (userid, name, subjectid) => {
+    const goToAgenda = (userid, name, subjectids) => {
         // console.log(userid, name, subjectid)
         navigate(
             '/agenda/' + userid,
-            {state: { userid: userid, name: name, subjectid: subjectid}}
+            {state: { userid: userid, person: name, subjectids: subjectids}}
             //{state: { bijlesKrijger: bijlesKrijgen, bijlesGever: bijlesGeven, richting: richting, location: value, firstName: firstName, lastName: lastName, email: email}}
           )
     }
@@ -472,6 +472,47 @@ export default function Match() {
                 :
                     console.log("no matches")
                 }
+                  <CardContent key="1">
+                    <Grid container spacing={3}>
+                    <Grid item >
+
+                    <Avatar
+                        alt="Olivier"
+                        //src={item.avatar}
+                        sx={{ 
+                            width: 150, 
+                            height: 150,
+                        }}
+                        />
+                    </Grid>
+                    <Grid item>
+                        <Typography variant="h5" component="div">
+                            Olvier Huyse
+                        </Typography>
+                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                            2 match(es)
+                        </Typography>
+
+
+                        <Grid container spacing={2}>
+                            <Grid item xs={8}>
+                                <p><EuroIcon/>18 {t('Match.3')}</p>
+                                <p><LocationOnIcon/> 17 {t('Match.2')}</p>
+                                <p><Rating name="read-only" value={3} readOnly /></p>
+                            </Grid>
+
+                            <Grid item xs={4}>
+                            <p>"LxcRRiHQhht0Aj5YRdvQ"</p>
+                            <p>"8WZvrVMNbqC1EvNPBTsy"</p>
+                            </Grid>
+                        </Grid>
+      
+                            <br />
+                        <Button onClick={() => goToAgenda("3mBoKVVbTAXyS4zgvm7pqQwsW9x1", "Olivier Huyse", ["LxcRRiHQhht0Aj5YRdvQ", "8WZvrVMNbqC1EvNPBTsy"])}>Boek een afspraak</Button>
+                    </Grid>
+                </Grid>
+
+                </CardContent>
                 {matches && matches.map((item, index) => 
                 (
                     <>
@@ -522,7 +563,12 @@ export default function Match() {
 
                         </CardContent>
                     : 
-                        <></>
+                    <> {/* test user*/}
+                  
+                </>
+
+
+
                     }
                 
                     </>

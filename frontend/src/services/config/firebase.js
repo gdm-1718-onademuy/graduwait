@@ -378,7 +378,8 @@ const getDataF = async () => {
   return data
 }
 
-const getAppointmentsUser = async (uid, isTutor, isTutee) => {
+const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
+  console.log(who)
 
   // * DATA ARRAY 
   const data = []

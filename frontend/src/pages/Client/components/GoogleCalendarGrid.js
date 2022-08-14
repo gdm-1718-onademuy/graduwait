@@ -63,7 +63,7 @@ const style = {
 // nu gwn kijken welke agenda dit is en dingen toevoegen 
 // -> https://dev.to/nouran96/google-calendar-events-with-react-544g
 
-export default function GoogleCalendarGrid() {
+export default function GoogleCalendarGrid(props) {
   // Declare a new state variable, which we'll call "count"
 
   //const scopes ="https://www.googleapis.com/auth/userSinfo.email https://www.googleapis.com/auth/calendar.readonly https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar";
@@ -105,6 +105,7 @@ export default function GoogleCalendarGrid() {
   const [appointmentId, setAppointmentId] = useState("")
   const [appointmentDetails, setAppointmentDetails] = useState()
   const [showAgenda, setShowAgenda] = useState(false)
+  const [isOwnAgenda, setIsOwnAgenda] = useState()
 
   // modal
   const [open, setOpen] = useState(false);
@@ -114,6 +115,16 @@ export default function GoogleCalendarGrid() {
   }
   const handleClose = () => setOpen(false);
 
+
+  
+  useEffect( () => {
+    //console.log(Object.keys(props).length === 0)
+    if(Object.keys(props).length !== 0){
+      setIsOwnAgenda(false)
+    } else {
+      setIsOwnAgenda(true)
+    }
+  }, [props]);
 
   useEffect(async () => {
     if (appointmentId !== ""){
@@ -126,7 +137,6 @@ export default function GoogleCalendarGrid() {
       })*/
     }
   }, [appointmentId]);
-
   useEffect( () => {
     console.log(open)
   }, [open]);
@@ -151,8 +161,6 @@ export default function GoogleCalendarGrid() {
   
   useEffect(async () => {
     //console.log(user)
-    console.log("am i doing something")
-    console.log(user)
     if (user){
       console.log("events")
       const userData = await getUserData(user.uid)
@@ -171,11 +179,18 @@ export default function GoogleCalendarGrid() {
   }, [user]);
 
   useEffect(async () => {
+    console.log(isOwnAgenda)
     if (isTutor && isTutee){
-      const eventsOfUser = await getAppointmentsUser(user.uid, isTutee, isTutor)
+      const eventsOfUser = await getAppointmentsUser(user.uid, isTutee, isTutor, "own")
       setEvents(eventsOfUser)
+
+      if (!isOwnAgenda){
+        const eventsOfOtherUser = await getAppointmentsUser(user.uid, isTutee, isTutor, "other")
+        setEvents(events => events.concat(eventsOfOtherUser))
+
+      }
     }
-  }, [isTutee, isTutor]);
+  }, [isTutee, isTutor, isOwnAgenda]);
 
   useEffect(async () => {
     setShowAgenda(true)

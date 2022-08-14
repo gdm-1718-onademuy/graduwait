@@ -14,20 +14,18 @@ export default function MyAgenda() {
   const navigate = useNavigate();
   //const { afspraakid } = useParams(); 
   const location = useLocation(); 
-  const [userid, setUserid] = useState();
-  const [name, setName] = useState("");
-  const [subjectids, setSubjectids] = useState("");
 
   useEffect(() => {
     //getDataUser()
-    /*if (location){
-      setName(location.state.name)
-      setUserid(location.state.userid)
-      setSubjectids(location.state.subjectids)
-    }*/
+
     if (loading) return;
     if (!user) return navigate("/");
   }, [user, loading]);
+
+  useEffect(() => {
+    //getDataUser()
+    console.log(location.state)
+  }, [location]);
 
   return (
     <>
@@ -56,7 +54,11 @@ export default function MyAgenda() {
                           height:'80vh',
                           overflow: 'auto'
                         }}>
-        <GoogleCalendarGrid /*afspraakid={afspraakid}*/ />
+        {!location.state?
+        <GoogleCalendarGrid />
+        :
+        <GoogleCalendarGrid userid = {location.state.userid} person={location.state.person} subjectids={location.state.subjectids} />
+        }
         </Paper>
       </Grid>
       </Grid>
