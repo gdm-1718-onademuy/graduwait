@@ -9,7 +9,7 @@ import { TextField, Grid, Modal, Button, Switch, FormControlLabel, Paper, Alert,
 import Title from './Title';
 import {useTranslation} from 'react-i18next';
 import {
-  auth,db,editApp, getAppointmentsUser, getUserData
+  auth, editAppointment, getAppointmentsUser, getUserData
 } from "../../../services/config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -126,8 +126,14 @@ export default function GoogleCalendarGrid() {
     }
   }, [appointmentId]);
 
-  useEffect(async () => {
+  useEffect( () => {
+    console.log(open)
+  }, [open]);
+
+  /*useEffect(async () => {
+    //console.log(user)
     if (user){
+      //console.log("events")
       const userData = await getUserData(user.uid)
       if (userData.getTutoring){
         setIsTutee(true)
@@ -139,10 +145,46 @@ export default function GoogleCalendarGrid() {
       setEvents(eventsOfUser)
       //console.log(eventsOfUser)
     }
+  }, [user]);*/
+
+  
+  useEffect(async () => {
+    //console.log(user)
+    console.log("am i doing something")
+    console.log(user)
+    if (user){
+      console.log("events")
+      const userData = await getUserData(user.uid)
+      if (userData.getTutoring){
+        setIsTutee(true)
+      } else {
+        setIsTutee(false)
+      }
+      if (userData.giveTutoring){
+        setIsTutor(true)
+      } else {
+        setIsTutor(false)
+      }
+      //console.log(eventsOfUser)
+    }
   }, [user]);
 
+  useEffect(async () => {
+    if (isTutor && isTutee){
+      const eventsOfUser = await getAppointmentsUser(user.uid, isTutee, isTutor)
+      setEvents(eventsOfUser)
+    }
+  }, [isTutee, isTutor]);
+
+  const changeStatusAppointment = async (status) => {
+    //console.log(status)
+    //console.log(appointmentDetails.id)
+    const response = await editAppointment(status, appointmentDetails.id)
+    console.log(response)
+  }
+
   /*const showDetails = (arg) => {
-    console.log(arg.event.id)
+    console.log(arg.event.id)     
     setPopUpDetail(true)
   }*/
 
@@ -150,8 +192,8 @@ export default function GoogleCalendarGrid() {
     <>
     {appointmentDetails &&
     <>
-    <Grid  container spacing={2} /*totaal is 12 bij xs*/> 
-    <Grid item justify="flex-end" xs={12}>  
+    <Grid container spacing={2} /*totaal is 12 bij xs*/> 
+    <Grid key={appointmentDetails.id} item justify="flex-end" xs={12}>  
     </Grid>
     <Grid item xs={12}>  
     <Grid item xs={12}>  
@@ -165,19 +207,28 @@ export default function GoogleCalendarGrid() {
           <Alert severity="warning">{t('Afspraak.12')}</Alert>
         }
         <>
-        <Grid  container spacing={2} /*totaal is 12 bij xs*/> 
+        <Grid  container spacing={1} /*totaal is 12 bij xs*/> 
          <Grid item xs={4}>  
-          Student
+         {t('Profile.6')}
           </Grid>
           <Grid item xs={8}>  
           {appointmentDetails.tuteeid}
           </Grid>
+
+         <Grid item xs={4}>  
+         {t('Profile.5')}
+          </Grid>
+          <Grid item xs={8}>  
+          {appointmentDetails.tutorid}
+          </Grid>
+
           <Grid item xs={4}>  
           {t('Afspraak.3')}
           </Grid>
           <Grid item xs={8}>  
           {appointmentDetails.date}
           </Grid>
+
           <Grid item xs={4}>  
           {t('Afspraak.4')}
           </Grid>
@@ -190,14 +241,21 @@ export default function GoogleCalendarGrid() {
           </Grid>
           <Grid item xs={8}>
           {appointmentDetails.endhour}
-          
           </Grid>
+
+          <Grid item xs={4}>  
+          {t('Afspraak.14')}
+          </Grid>
+          <Grid item xs={8}>
+          {appointmentDetails.location}
+          </Grid>
+          
         </Grid>
         </>
         {appointmentDetails.isconfirmed ?
-          <Alert severity="success">{t('Afspraak.10')}{t('Afspraak.11')}</Alert>
+          <></>
           :
-          <Button id={afspraakid} /*onClick={confirmApp}*/>{t('Afspraak.9')}</Button>
+          <Button variant="contained" fullWidth color="success" onClick={() => changeStatusAppointment("confirm")}>{t('Afspraak.9')}</Button>
         }
         </>
       :
@@ -213,7 +271,7 @@ export default function GoogleCalendarGrid() {
     </Grid>
 
           <Grid item xs={12}>
-           <Button variant="outlined" fullWidth color="error" startIcon={<DeleteIcon />} /*onClick={deleteApp}*/>{t('Afspraak.7')}</Button>
+           <Button variant="outlined" fullWidth color="error" startIcon={<DeleteIcon />} onClick={() => changeStatusAppointment("cancel")}>{t('Afspraak.7')}</Button>
            </Grid>
     </Grid> 
     </>
@@ -234,7 +292,8 @@ export default function GoogleCalendarGrid() {
                           overflow: 'auto'
                         }}>
      <Title>{t('Agenda.1')} </Title>
-  
+     
+      {events ?
       <FullCalendar 
       plugins={[ dayGridPlugin, interactionPlugin, timeGridPlugin ]}
       initialView="dayGridMonth"
@@ -249,8 +308,10 @@ export default function GoogleCalendarGrid() {
       }}
       //businessHours={vrijeTijd}  
       events={events}
-  
       />
+      :
+      <p>Loading</p>
+      }
       </Paper>
       </Grid>
       </Grid>

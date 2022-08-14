@@ -78,7 +78,9 @@
         "1": "Bijles geven inschakelen",
         "2": "Bijles krijgen inschakelen",
         "3": "Bijles geven uitschakelen",
-        "4": "Bijles krijgen uitschakelen"
+        "4": "Bijles krijgen uitschakelen",
+        "5": "Bijles gever",
+        "6": "Bijles krijger"
     },
     "Userdata": {
         "1": "Voornaam",

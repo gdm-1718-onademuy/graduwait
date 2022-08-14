@@ -13,7 +13,7 @@ import {useTranslation} from 'react-i18next';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {
-  auth,db,editApp
+  auth,db,editAppointment
 } from "../../../services/config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Paper from '@mui/material/Paper';
@@ -309,7 +309,7 @@ function GoogleCalendarGrid(props) {
   const confirmApp = (event) => { 
     event.preventDefault()
     const value = "confirm"
-    editApp(value, afspraakid)
+    editAppointment(value, afspraakid)
     searchEvent(afspraakid)
     setAfspraakarray()
     getEvents()
@@ -318,7 +318,7 @@ function GoogleCalendarGrid(props) {
 
   const deleteApp = () => { 
     const value = "delete"
-    editApp(value, afspraakid)
+    editAppointment(value, afspraakid)
     closeEvent()
     getEvents()
 
@@ -486,7 +486,7 @@ function GoogleCalendarGrid(props) {
                 {afspraakarray.isconfirmed  
                   ?
                   <></>
-                  :
+                  : 
                   <Button id={afspraakid} onClick={confirmApp}>{t('Afspraak.9')}</Button>
                 }
               </>

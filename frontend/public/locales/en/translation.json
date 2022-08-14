@@ -71,14 +71,17 @@
         "10": "This appointment is confirmed by ",
         "11": "you",
         "12": "This appointment needs to be confirmed or cancelled by you",
-        "13": "This appointment needs to be confirmed by "
+        "13": "This appointment needs to be confirmed by ",
+        "14": "Location"
 
     },
     "Profile": {
         "1": "Enable tutoring",
         "2": "Enable getting tutored",
         "3": "Disable tutoring",
-        "4": "Disable getting tutored"
+        "4": "Disable getting tutored",
+        "5": "Tutor",
+        "6": "Tutee"
     },
     "Userdata": {
         "1": "First name",

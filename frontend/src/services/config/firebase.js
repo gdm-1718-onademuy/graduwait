@@ -157,7 +157,7 @@ const addKostUser = async (uid, kost) => {
 
 // AGENDA FUNCTIONALITIES
 // add an appointment
-const addAfspraak = async (tutorid, studentid, date, starthour, endhour, vakkenIds, opmerking) => {
+const addAfspraak = async (tutorid, studentid, date, starthour, endhour, vakkenIds, opmerking, location) => {
     const today = new Date(); 
 
     let afspraak_id 
@@ -171,6 +171,7 @@ const addAfspraak = async (tutorid, studentid, date, starthour, endhour, vakkenI
       starthour: starthour,
       endhour: endhour,
       subjectid: vakkenIds,
+      location: location
     }
     if(opmerking){
       object.opmerking= opmerking
@@ -190,30 +191,26 @@ const addAfspraak = async (tutorid, studentid, date, starthour, endhour, vakkenI
 };
 
 // edit appointments (delete or confirm)
-const editApp = async (todo, eventid) => {
-  if(todo === "delete"){
-    await db.collection("tutoring")
-    .doc(eventid)
-    .delete().then(() => {
-      console.log("Document successfully deleted!");
-  }).catch((error) => {
-      console.error("Error removing document: ", error);
-  });
-
+const editAppointment = async (todo, eventid) => {
+  const updateObj = {}
+  if(todo === "cancel"){ // veranderen naar cancel!
+    updateObj.iscanceled = true
   } else if (todo === "confirm"){
-    await db.collection("tutoring")
-    .doc(eventid)
-    .update({
-      isconfirmed: true
-    })
-    .then(() => {
-      console.log("Document successfully set confirmed on true!");
-    })
-    .catch(function(error) {
-      console.error("Error adding document: ", error);
-    })
+    updateObj.isconfirmed = true
   }
 
+  let resp
+  await db.collection("tutoring")
+  .doc(eventid)
+  .update(updateObj)
+  .then(() => {
+    resp = todo
+  }).catch((error) => {
+    resp = error
+    //console.error("Error removing document: ", error);
+  });
+
+  return resp
 }
 
 
@@ -413,6 +410,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee) => {
       element.date = doc.data().date
       element.starthour = doc.data().starthour
       element.endhour = doc.data().endhour
+      element.location = doc.data().location
 
       // color blue for TUTORING
       if(isconfirmed){
@@ -453,6 +451,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee) => {
       element.date = doc.data().date
       element.starthour = doc.data().starthour
       element.endhour = doc.data().endhour
+      element.location = doc.data().location
 
       // color purple for TUTORING
       if(isconfirmed){
@@ -480,7 +479,7 @@ export {
     registerWithEmailAndPassword,
     logout,
     addAfspraak,
-    editApp,
+    editAppointment,
     addDataUser,
     getMatchingUsers,
     getDataF,
