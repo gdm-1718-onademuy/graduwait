@@ -361,21 +361,6 @@ const getMatchingUsers = (userid) => {
 }
 
 
-const getNameSubjectById = async (subjectid) => {
-
-  // * DATA ARRAY 
-  let data 
-  
-  await db.collection("subject")
-  .doc(subjectid)
-  .get()
-  .then((querySnapshot) => {
-    data = querySnapshot.data().subject
-  })
-
-  return data
-}
-
 const getDataF = async () => {
 
   // * DATA ARRAY 
@@ -548,7 +533,6 @@ export {
     db,
     storage,
     firebase,
-    getNameSubjectById,
     signInWithGoogle,
     signInWithEmailAndPassword,
     registerWithEmailAndPassword,

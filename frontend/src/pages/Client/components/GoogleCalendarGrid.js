@@ -5,11 +5,11 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction" // needed for dayClick
 import { styled, Box } from '@mui/system';
 import ModalUnstyled from '@mui/base/ModalUnstyled';
-import { TextField, Checkbox, FormGroup, Grid, Modal, ButtonGroup, Button, Switch, FormControlLabel, Paper, Alert, Typography}  from '@mui/material';
+import { TextField, Select, MenuItem, Checkbox, FormGroup, Grid, Modal, ButtonGroup, Button, Switch, FormControlLabel, Paper, Alert, Typography}  from '@mui/material';
 import Title from './Title';
 import {useTranslation} from 'react-i18next';
 import {
-  auth, editAppointment, getAppointmentsUser, getUserData, getNameSubjectById
+  auth, editAppointment, getAppointmentsUser, getUserData
 } from "../../../services/config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -19,7 +19,7 @@ import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
@@ -121,7 +121,11 @@ export default function GoogleCalendarGrid(props) {
   const [subjects, setSubjects] = useState([])
   const [ok, setOk] = useState(false)
   const [opmerking, setOpmerking] = useState()
-  const [checkedVakken, setCheckedVakken] = useState()
+  const [checkedVakken, setCheckedVakken] = useState({})
+  const [minDate, setMinDate] = useState()
+  const [errorForm, setErrorForm] = useState("");
+  const [location, setLocation] = useState("");
+  const [possibleLocations, setPossibleLocations] = useState([{label:"Online", value:"online"}])
 
 
   // modal
@@ -186,7 +190,14 @@ export default function GoogleCalendarGrid(props) {
   useEffect(async () => {
     //console.log(user)
     if (user){
+      getTomorrowsDate()
       const userData = await getUserData(user.uid)
+      if(userData.meetingsAddress){
+        const checkLabel = obj => obj.label === 'tutee'
+        if(!possibleLocations.some(checkLabel)){
+          setPossibleLocations(possibleLocations => possibleLocations.concat({label:t('Afspraak.16'), value:"tutee"}))
+        }
+      }
       if (userData.getTutoring){
         setIsTutee(true)
       } else {
@@ -206,6 +217,7 @@ export default function GoogleCalendarGrid(props) {
   }, [subjectids]);
 
   useEffect(async () => {
+    if (user){
     if (isTutor !== "" && isTutee !== ""){
       const eventsOfUser = await getAppointmentsUser(user.uid, isTutor, isTutee, "own")
       setEvents(eventsOfUser)
@@ -215,18 +227,49 @@ export default function GoogleCalendarGrid(props) {
         setEvents(events => events.concat(eventsOfOtherUser))
       }
     }
-  }, [isTutee, isTutor, isOwnAgenda]);
+  }
+  }, [isTutee, isTutor, isOwnAgenda, user]);
+
+  useEffect( async () => {
+    let newLocation
+
+    if (userid){
+      const userData = await getUserData(userid)
+      if(userData.meetingsAddress){
+        const checkLabel = obj => obj.label === 'tutor'
+        if(!possibleLocations.some(checkLabel)){
+          setPossibleLocations(possibleLocations => possibleLocations.concat({label:t('Afspraak.17'), value:"tutor"}))
+        }
+      }
+    }
+    //setPossibleLocations(possibleLocations.concat(newLocation))
+  }, [userid]);
+
+  useEffect( () => {
+    console.log(checkedVakken)
+    //setPossibleLocations(possibleLocations.concat(newLocation))
+  }, [checkedVakken]);
+
+
+
 
   useEffect( () => {
     setShowAgenda(true)
     console.log(events)
-  }, [events]);
+  }, [person]);
 
   const changeStatusAppointment = async (status) => {
     //console.log(status)
     //console.log(appointmentDetails.id)
     const response = await editAppointment(status, appointmentDetails.id)
     console.log(response)
+  }
+
+  const getTomorrowsDate =  () => {
+    const today = new Date()
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    setMinDate(tomorrow)
   }
 
   const addAppointment = (arg) => {
@@ -236,10 +279,12 @@ export default function GoogleCalendarGrid(props) {
     setModalAppointment(true)
     setOpen(true)
 
+    const startHour = String(arg.date.getHours()).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0')
+    const endHour = String(arg.date.getHours()+1).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0')
     setDate(arg.date.getFullYear() + "-" + month + "-" + day)
     setStarthour(String(arg.date.getHours()).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
     setEndhour(String(arg.date.getHours()+1).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
-    console.log(month, day)
+
 
     //handleOpen()
   }
@@ -248,6 +293,13 @@ export default function GoogleCalendarGrid(props) {
     console.log("let's book")
   }
 
+  const handleChange = (event) => {
+    setCheckedVakken({
+      ...checkedVakken,
+      [event.target.id]: event.target.checked,
+    });
+  };
+
   /*const showDetails = (arg) => {
     console.log(arg.event.id)     
     setPopUpDetail(true)
@@ -255,6 +307,11 @@ export default function GoogleCalendarGrid(props) {
 
   const RequestAppointment = () => (
     <>
+     {errorForm &&
+      <Grid item xs={12} >
+        <Alert severity="error">{errorForm}</Alert>
+      </Grid>
+     }
     <Title>{t('Agenda.4')}</Title>
     <Grid container spacing={2} /*totaal is 12 bij xs*/> 
       <Grid item xs={4}>  
@@ -275,9 +332,9 @@ export default function GoogleCalendarGrid(props) {
             required
             label={t('Afspraak.3')}
             inputFormat="dd/MM/yyyy"
-            //maxDate={birthdaysHighschool}
             value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={(e) => setDate(e)}
+            minDate={minDate}
             renderInput={(params) => <TextField fullWidth {...params} />}
           />
         </LocalizationProvider>
@@ -288,28 +345,24 @@ export default function GoogleCalendarGrid(props) {
       </Grid>
       
       <Grid item xs={8}>  
-        <TextField
-          required
-          id="time"
-          label="From"
-          type="time"
-          name="from"
-          readonly='true'
-          onChange={(e) => 
-              setStarthour(e.target.value)
-          }
-          InputLabelProps={{
-          shrink: true,
-          }}
-          inputProps={{
-          step: 300, // 5 min
-          }}
-          fullWidth
-          //defaultValue="08:00"
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <TimePicker
+          renderInput={(params) => <TextField {...params} />}
+          label={t('Afspraak.4')}
           value={starthour}
-          InputProps={{inputProps: { min: "09:00" }}}
-
+          minTime={new Date(0, 0, 0, 8)}
+          maxTime={new Date(0, 0, 0, 18, 45)}
+          onChange={(e) => {
+            setStarthour(e);
+          }}
+          shouldDisableTime={(timeValue, clockType) => {
+            if (clockType === 'minutes' && timeValue % 30) {
+              return true;
+            }
+            return false;
+          }}
         />
+      </LocalizationProvider>
     </Grid>
 
 
@@ -318,36 +371,45 @@ export default function GoogleCalendarGrid(props) {
       </Grid>
       
       <Grid item xs={8}>
-        <TextField
-          id="time"
-          label="To"
-          type="time"
-          name="from"
-          fullWidth
-          disabled
-          //defaultValue={schema[number]}
-          onChange={(e) => 
-              setEndhour(e.target.value)
-            }
-          InputLabelProps={{
-          shrink: true,
-          }}
-          inputProps={{
-          step: 300, // 5 min
-          }}
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <TimePicker
+          renderInput={(params) => <TextField {...params} />}
+          label={t('Afspraak.5')}
           value={endhour}
-      />
+          minTime={new Date(0, 0, 0, 8)}
+          maxTime={new Date(0, 0, 0, 18, 45)}
+          onChange={(e) => {
+            setEndhour(e);
+          }}
+          shouldDisableTime={(timeValue, clockType) => {
+            if (clockType === 'minutes' && timeValue % 30) {
+              return true;
+            }
+            return false;
+          }}
+        />
+      </LocalizationProvider>
       </Grid>
 
       <Grid item xs={4}>  
           {t('Afspraak.14')}
       </Grid>
       <Grid item xs={8}>  
-          
+          <Select 
+          id="demo-simple-select"
+          fullWidth
+          onChange={(e)=>setLocation(e.target.value)}
+          label={t('Afspraak.14')}
+          value={location}>
+        {possibleLocations?.map(possible => {
+            return (
+              <MenuItem key={possible.value} value={possible.value}>
+                {possible.label ?? possible.value}
+              </MenuItem>
+            );
+        })}
+      </Select>
       </Grid>
-
-      <Grid item xs={5}>
-          </Grid>
 
           <Grid item xs={4}>  
           {t('Afspraak.6')}
@@ -358,18 +420,39 @@ export default function GoogleCalendarGrid(props) {
                <Grid item xs={8}>
                 <FormGroup>
                 {subjectids.map((item, index) => (
+                  
+
                   <FormControlLabel control={
                   <Checkbox 
-                    //id={item.subjectid}
                     id={item.subjectid}
+                    //checked={checkedVakken[index]}
                     //checked={checked[item.subjectid]}
                     //checked={checked[item]}
-                    //checked={item}
-                    onChange={() => setCheckedVakken({
+                    //checked={checkedVakken[item.subjectid]}
+                    //checked={}
+                    checked={checkedVakken[item.subjectid]}
+                    onChange={handleChange}
+                    defaultChecked
+
+                    //checked={checkedVakken[index]}
+                    /*onChange={(e) => {
+                      console.log(e)
+                      setCheckedVakken({
+                      ...checkedVakken,
+                      [index]: e.target
+                    })*/
+
+                      
+                      /*setCheckedVakken((e) => ({
+                      ...checkedVakken,
+                      [index]: e.target
+                    }))}*/
+
+                    /*onChange={() => setCheckedVakken({
                       ...checkedVakken,
                       [index]: item,
-                    })}
-                    defaultChecked />
+                    })}*/
+                    />
                   } 
                   label={item.subject} />
                 ))}
@@ -382,7 +465,7 @@ export default function GoogleCalendarGrid(props) {
             }
           
           <Grid item xs={4}>  
-          Voeg een opmerking toe
+          {t('Afspraak.15')}
           </Grid>
 
           <Grid item xs={8}>
@@ -409,7 +492,7 @@ export default function GoogleCalendarGrid(props) {
       sx={{ mt: 3, mb: 2 }}
       onClick={() => aanvraagTutor}
     >
-      Boek deze afspraak
+      {t('Afspraak.18')}
     </Button>
     </Box>
   </>
