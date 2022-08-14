@@ -505,221 +505,7 @@ function UserProfile() {
 
   const EditGegevensUser = () => (
 
-    <>
-    <Box component="form" noValidate autoComplete="off" sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-            <Grid item xs={12} sm={4}>
-                <p>{t('Userdata.3')}</p>
-              </Grid>
-              <Grid item xs={12} sm={8}>
-                <p>{email}</p>
-              </Grid>
-
-              <Grid item xs={12} sm={4}>
-                <p>{t('Userdata.1')}</p>
-              </Grid>
-              <Grid item xs={12} sm={8}>
-              <TextField
-                required
-                fullWidth
-                value={firstName}
-                id="firstName"
-                label={t('Userdata.1')}
-                name="firstName"
-                autoComplete="firstName"
-                // autoFocus
-                onChange={(e) => setFirstName(e.target.value)}
-              />
-              </Grid>
-
-              <Grid item xs={12} sm={4}>
-                <p>{t('Userdata.2')}</p>
-              </Grid>
-              <Grid item xs={12} sm={8}>
-              <TextField
-                required
-                fullWidth
-                value={lastName}
-                id="lastName"
-                label={t('Userdata.2')}
-                name="lastName"
-                // autoComplete="lastName"
-                // autoFocus
-                onKeyDown={onChange}
-              />
-              </Grid>
-              <Grid item xs={12} sm={4}>
-                <p>{t('Userdata.12')}</p>
-              </Grid>
-              <Grid item xs={12} sm={8}>
-                
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DesktopDatePicker
-                    required
-                    label="Birthday"
-                    inputFormat="dd/MM/yyyy"
-                    maxDate={birthdaysHighschool}
-                    value={birthday}
-                    onChange={(e) => setBirthday(e)}
-                    renderInput={(params) => <TextField fullWidth {...params} />}
-                  />
-                </LocalizationProvider>
-              </Grid>
-
-              
-              
-              <Grid item xs={12} sm={4}>
-                <p>{t('Userdata.4')}</p>
-              </Grid>
-              <Grid item xs={12} sm={8}>
-              <Autocomplete
-                id="google-map-demo"
-                //fullWidth
-                //sx={{ width: 350 }}
-                getOptionLabel={(option) =>
-                  typeof option === 'string' ? option : option.description
-                }
-                filterOptions={(x) => x}
-                options={options}
-                autoComplete
-                includeInputInList
-                filterSelectedOptions
-                value={value}
-                onChange={(event, newValue) => {
-                  setOptions(newValue ? [newValue, ...options] : options);
-                  setValue(newValue);
-                }}
-                onInputChange={(event, newInputValue) => {
-                  setInputValue(newInputValue);
-                }}
-                renderInput={(params) => (
-                  <TextField {...params} label="Location" fullWidth />
-                )}
-                renderOption={(props, option) => {
-                  const matches = option.structured_formatting.main_text_matched_substrings;
-                  const parts = parse(
-                    option.structured_formatting.main_text,
-                    matches.map((match) => [match.offset, match.offset + match.length]),
-                  );
-          
-                  return (
-                    <li {...props}>
-                      <Grid container alignItems="center">
-                        <Grid item>
-                          <Box
-                            component={LocationOnIcon}
-                            sx={{ color: 'text.secondary', mr: 2 }}
-                          />
-                        </Grid>
-                        <Grid item xs>
-                          {parts.map((part, index) => (
-                            <span
-                              key={index}
-                              style={{
-                                fontWeight: part.highlight ? 700 : 400,
-                              }}
-                            >
-                              {part.text}
-                            </span>
-                          ))}
-          
-                          <Typography variant="body2" color="text.secondary">
-                            {option.structured_formatting.secondary_text}
-                          </Typography>
-                        </Grid>
-                      </Grid>
-                    </li>
-                  );
-                }}
-              />
-              </Grid>
-              
-              {/*
-              <Grid item xs={12} sm={4}>
-                <p>{t('Userdata.5')}</p>
-              </Grid>
-              <Grid item xs={12} sm={8}>
-                <Select
-                  fullWidth
-                  //sx={{ width: 360 }}
-                  variant="outlined"
-                  id="richting"
-                  value={richting}
-                  label={t('Userdata.5')}
-                  onChange={(e) => setRichting(e.target.value)}
-                >
-                  {fieldsOfStudy && fieldsOfStudy.length > 0 && fieldsOfStudy.map((option , id) => (
-                  <MenuItem key={id} value={option.course_name}>
-                  {option.course_name }
-                  </MenuItem>
-                ))}
-                </Select>
-              </Grid>
-                  */}
-                  
-
-              {isTutor?
-              <>
-              <Grid item xs={12} sm={4}>
-                <p>{t('Userdata.6')}</p>
-              </Grid>
-              <Grid item xs={12} sm={8}>
-              <TextField
-                    required
-                    fullWidth
-                    id="kost"
-                    label={t('Userdata.6')}
-                    name="kost"
-                    autoComplete="kost"
-                    value={kost}
-                    type="number"
-                    InputProps={{ inputProps: { min: 0, max: 20 } }}
-                    onChange={(e) => {
-                      if(e.target.value <= 20){
-                        setKost(e.target.value)
-                      } 
-                    }
-                    }
-                  />
-              </Grid>
-              </>
-              :
-              <></>
-              }
-
-
-            </Grid>
-
-            <Grid container spacing={2} sx={{ mt: 2 }}>
-            <Grid item xs={12}>
-                <Button 
-                  type="button"
-                  fullWidth
-                  variant="contained"
-                  onClick={slaGegevensOp}
-                  style={{
-                    backgroundColor: colors.purple,
-                    color: 'white'
-                  }}
-                >{t('Buttons.5')} </Button>
-              </Grid>
-
-              <Grid item xs={12}>
-                <Button
-                  type="button"
-                  fullWidth
-                  variant="outlined"
-                  onClick={cancel}
-                  style={{
-                    color: colors.purple,
-                    //color: 'white'
-                  }}
-                > {t('Buttons.6')}          
-                </Button>
-              </Grid>
-            </Grid>
-          </Box>
-    </>
+  <></>
   )
 
   const GegevensUser = () => (
@@ -884,7 +670,221 @@ function UserProfile() {
                     changePassword && changePassword ?
                       <ChangePassword/>
                     :
-                      <EditGegevensUser />
+                    <>
+                    <Box component="form" noValidate autoComplete="off" sx={{ mt: 3 }}>
+                            <Grid container spacing={2}>
+                            <Grid item xs={12} sm={4}>
+                                <p>{t('Userdata.3')}</p>
+                              </Grid>
+                              <Grid item xs={12} sm={8}>
+                                <p>{email}</p>
+                              </Grid>
+                
+                              <Grid item xs={12} sm={4}>
+                                <p>{t('Userdata.1')}</p>
+                              </Grid>
+                              <Grid item xs={12} sm={8}>
+                              <TextField
+                                required
+                                fullWidth
+                                value={firstName}
+                                id="firstName"
+                                label={t('Userdata.1')}
+                                name="firstName"
+                                autoComplete="firstName"
+                                // autoFocus
+                                onChange={(e) => setFirstName(e.target.value)}
+                              />
+                              </Grid>
+                
+                              <Grid item xs={12} sm={4}>
+                                <p>{t('Userdata.2')}</p>
+                              </Grid>
+                              <Grid item xs={12} sm={8}>
+                              <TextField
+                                required
+                                fullWidth
+                                value={lastName}
+                                id="lastName"
+                                label={t('Userdata.2')}
+                                name="lastName"
+                                // autoComplete="lastName"
+                                // autoFocus
+                                onKeyDown={onChange}
+                              />
+                              </Grid>
+                              <Grid item xs={12} sm={4}>
+                                <p>{t('Userdata.12')}</p>
+                              </Grid>
+                              <Grid item xs={12} sm={8}>
+                                
+                                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                  <DesktopDatePicker
+                                    required
+                                    label="Birthday"
+                                    inputFormat="dd/MM/yyyy"
+                                    maxDate={birthdaysHighschool}
+                                    value={birthday}
+                                    onChange={(e) => setBirthday(e)}
+                                    renderInput={(params) => <TextField fullWidth {...params} />}
+                                  />
+                                </LocalizationProvider>
+                              </Grid>
+                
+                              
+                              
+                              <Grid item xs={12} sm={4}>
+                                <p>{t('Userdata.4')}</p>
+                              </Grid>
+                              <Grid item xs={12} sm={8}>
+                              <Autocomplete
+                                id="google-map-demo"
+                                //fullWidth
+                                //sx={{ width: 350 }}
+                                getOptionLabel={(option) =>
+                                  typeof option === 'string' ? option : option.description
+                                }
+                                filterOptions={(x) => x}
+                                options={options}
+                                autoComplete
+                                includeInputInList
+                                filterSelectedOptions
+                                value={value}
+                                onChange={(event, newValue) => {
+                                  setOptions(newValue ? [newValue, ...options] : options);
+                                  setValue(newValue);
+                                }}
+                                onInputChange={(event, newInputValue) => {
+                                  setInputValue(newInputValue);
+                                }}
+                                renderInput={(params) => (
+                                  <TextField {...params} label="Location" fullWidth />
+                                )}
+                                renderOption={(props, option) => {
+                                  const matches = option.structured_formatting.main_text_matched_substrings;
+                                  const parts = parse(
+                                    option.structured_formatting.main_text,
+                                    matches.map((match) => [match.offset, match.offset + match.length]),
+                                  );
+                          
+                                  return (
+                                    <li {...props}>
+                                      <Grid container alignItems="center">
+                                        <Grid item>
+                                          <Box
+                                            component={LocationOnIcon}
+                                            sx={{ color: 'text.secondary', mr: 2 }}
+                                          />
+                                        </Grid>
+                                        <Grid item xs>
+                                          {parts.map((part, index) => (
+                                            <span
+                                              key={index}
+                                              style={{
+                                                fontWeight: part.highlight ? 700 : 400,
+                                              }}
+                                            >
+                                              {part.text}
+                                            </span>
+                                          ))}
+                          
+                                          <Typography variant="body2" color="text.secondary">
+                                            {option.structured_formatting.secondary_text}
+                                          </Typography>
+                                        </Grid>
+                                      </Grid>
+                                    </li>
+                                  );
+                                }}
+                              />
+                              </Grid>
+                              
+                              {/*
+                              <Grid item xs={12} sm={4}>
+                                <p>{t('Userdata.5')}</p>
+                              </Grid>
+                              <Grid item xs={12} sm={8}>
+                                <Select
+                                  fullWidth
+                                  //sx={{ width: 360 }}
+                                  variant="outlined"
+                                  id="richting"
+                                  value={richting}
+                                  label={t('Userdata.5')}
+                                  onChange={(e) => setRichting(e.target.value)}
+                                >
+                                  {fieldsOfStudy && fieldsOfStudy.length > 0 && fieldsOfStudy.map((option , id) => (
+                                  <MenuItem key={id} value={option.course_name}>
+                                  {option.course_name }
+                                  </MenuItem>
+                                ))}
+                                </Select>
+                              </Grid>
+                                  */}
+                                  
+                
+                              {isTutor?
+                              <>
+                              <Grid item xs={12} sm={4}>
+                                <p>{t('Userdata.6')}</p>
+                              </Grid>
+                              <Grid item xs={12} sm={8}>
+                              <TextField
+                                    required
+                                    fullWidth
+                                    id="kost"
+                                    label={t('Userdata.6')}
+                                    name="kost"
+                                    autoComplete="kost"
+                                    value={kost}
+                                    type="number"
+                                    InputProps={{ inputProps: { min: 0, max: 20 } }}
+                                    onChange={(e) => {
+                                      if(e.target.value <= 20){
+                                        setKost(e.target.value)
+                                      } 
+                                    }
+                                    }
+                                  />
+                              </Grid>
+                              </>
+                              :
+                              <></>
+                              }
+                
+                
+                            </Grid>
+                
+                            <Grid container spacing={2} sx={{ mt: 2 }}>
+                            <Grid item xs={12}>
+                                <Button 
+                                  type="button"
+                                  fullWidth
+                                  variant="contained"
+                                  onClick={slaGegevensOp}
+                                  style={{
+                                    backgroundColor: colors.purple,
+                                    color: 'white'
+                                  }}
+                                >{t('Buttons.5')} </Button>
+                              </Grid>
+                
+                              <Grid item xs={12}>
+                                <Button
+                                  type="button"
+                                  fullWidth
+                                  variant="outlined"
+                                  onClick={cancel}
+                                  style={{
+                                    color: colors.purple,
+                                    //color: 'white'
+                                  }}
+                                > {t('Buttons.6')}          
+                                </Button>
+                              </Grid>
+                            </Grid>
+                          </Box>
+                    </>
                   
                   :
                     <GegevensUser />  
