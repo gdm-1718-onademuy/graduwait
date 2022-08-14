@@ -407,6 +407,12 @@ const getAppointmentsUser = async (uid, isTutor, isTutee) => {
       element.end = longend
       element.isconfirmed = isconfirmed
       element.subjects = doc.data().subjectid
+      element.role = "tutor"
+      element.tuteeid = doc.data().studentid
+      element.tutorid = doc.data().tutorid
+      element.date = doc.data().date
+      element.starthour = doc.data().starthour
+      element.endhour = doc.data().endhour
 
       // color blue for TUTORING
       if(isconfirmed){
@@ -441,6 +447,12 @@ const getAppointmentsUser = async (uid, isTutor, isTutee) => {
       element.end = longend
       element.isconfirmed = isconfirmed
       element.subjects = doc.data().subjectid
+      element.role = "tutee"
+      element.tuteeid = doc.data().studentid
+      element.tutorid = doc.data().tutorid
+      element.date = doc.data().date
+      element.starthour = doc.data().starthour
+      element.endhour = doc.data().endhour
 
       // color purple for TUTORING
       if(isconfirmed){

@@ -155,31 +155,76 @@ export default function GoogleCalendarGrid() {
 
   const DataEvent = () => (
     <>
-    
-    {console.log(appointmentId)}
-
+    {appointmentDetails &&
+    <>
     <Grid  container spacing={2} /*totaal is 12 bij xs*/> 
     <Grid item justify="flex-end" xs={12}>  
     </Grid>
     <Grid item xs={12}>  
     <Grid item xs={12}>  
-   
-        <Title>{t('Afspraak.8')}</Title>
-        <Title>{t('Afspraak.1')}</Title>
+        <Title>{appointmentDetails.title}</Title>
     </Grid>
-    
-            <Alert severity="success">{t('Afspraak.10')}{t('Afspraak.11')}</Alert>
-            <Alert severity="success">{t('Afspraak.10')}{firstname}</Alert>
+      {appointmentDetails.role === "tutor"?
+        <>
+        {appointmentDetails.isconfirmed ?
+          <Alert severity="success">{t('Afspraak.10')}{t('Afspraak.11')}</Alert>
+          :
+          <Alert severity="warning">{t('Afspraak.12')}</Alert>
+        }
+        <>
+        <Grid  container spacing={2} /*totaal is 12 bij xs*/> 
+         <Grid item xs={4}>  
+          Student
+          </Grid>
+          <Grid item xs={8}>  
+          {appointmentDetails.tuteeid}
+          </Grid>
+          <Grid item xs={4}>  
+          {t('Afspraak.3')}
+          </Grid>
+          <Grid item xs={8}>  
+          {appointmentDetails.date}
+          </Grid>
+          <Grid item xs={4}>  
+          {t('Afspraak.4')}
+          </Grid>
+          <Grid item xs={8}>  
+          {appointmentDetails.starthour}
+          </Grid>
 
-            <Alert severity="warning">{t('Afspraak.12')}</Alert>
-
+          <Grid item xs={4}>  
+          {t('Afspraak.5')}
+          </Grid>
+          <Grid item xs={8}>
+          {appointmentDetails.endhour}
+          
+          </Grid>
+        </Grid>
+        </>
+        {appointmentDetails.isconfirmed ?
+          <Alert severity="success">{t('Afspraak.10')}{t('Afspraak.11')}</Alert>
+          :
+          <Button id={afspraakid} /*onClick={confirmApp}*/>{t('Afspraak.9')}</Button>
+        }
+        </>
+      :
+        <>
+        {appointmentDetails.isconfirmed ?
             <Alert severity="warning">{t('Afspraak.13')}{firstname}</Alert>
+            :
+          <Alert severity="success">{t('Afspraak.10')}{firstname}</Alert>
+        }
+        </>
+      }
+
     </Grid>
 
           <Grid item xs={12}>
            <Button variant="outlined" fullWidth color="error" startIcon={<DeleteIcon />} /*onClick={deleteApp}*/>{t('Afspraak.7')}</Button>
            </Grid>
-    </Grid>
+    </Grid> 
+    </>
+    }
    </>
       
   )
