@@ -28,7 +28,7 @@ export default function Agenda() {
   const navigate = useNavigate();
   const { id } = useParams(); 
   const { t } = useTranslation()
-  const location = useLocation();
+  const location = useLocation(); 
  
   useEffect(() => {
     //console.log(location.state)

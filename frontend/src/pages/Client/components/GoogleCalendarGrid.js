@@ -106,12 +106,19 @@ export default function GoogleCalendarGrid(props) {
   const [appointmentDetails, setAppointmentDetails] = useState()
   const [showAgenda, setShowAgenda] = useState(false)
   const [isOwnAgenda, setIsOwnAgenda] = useState()
+  const [person, setPerson] = useState()
+  const [subjectids, setSubjectids] = useState()
+  const [userid, setUserid] = useState()
+  const [otherIsTutor, setOtherIsTutor] = useState()
+  const [otherIsTutee, setOtherIsTutee] = useState()
 
   // modal
   const [open, setOpen] = useState(false);
   const handleOpen = (args) => {
-    setAppointmentId(args.event.id)
-    setOpen(true);
+    if(args.event.title !== ""){
+      setAppointmentId(args.event.id)
+      setOpen(true);
+    }
   }
   const handleClose = () => setOpen(false);
 
@@ -120,6 +127,12 @@ export default function GoogleCalendarGrid(props) {
   useEffect( () => {
     //console.log(Object.keys(props).length === 0)
     if(Object.keys(props).length !== 0){
+      console.log(props)
+      setPerson(props.person)
+      setUserid(props.userid)
+      setSubjectids(props.subjectids)
+      setOtherIsTutor(props.isTutor)
+      setOtherIsTutee(props.isTutee)
       setIsOwnAgenda(false)
     } else {
       setIsOwnAgenda(true)
@@ -179,21 +192,21 @@ export default function GoogleCalendarGrid(props) {
   }, [user]);
 
   useEffect(async () => {
-    console.log(isOwnAgenda)
-    if (isTutor && isTutee){
-      const eventsOfUser = await getAppointmentsUser(user.uid, isTutee, isTutor, "own")
+    if (isTutor !== "" && isTutee !== ""){
+      const eventsOfUser = await getAppointmentsUser(user.uid, isTutor, isTutee, "own")
       setEvents(eventsOfUser)
 
       if (!isOwnAgenda){
-        const eventsOfOtherUser = await getAppointmentsUser(user.uid, isTutee, isTutor, "other")
+        console.log(otherIsTutor, otherIsTutee, person, userid)
+        const eventsOfOtherUser = await getAppointmentsUser(user.uid, otherIsTutor, otherIsTutee, userid)
         setEvents(events => events.concat(eventsOfOtherUser))
-
       }
     }
   }, [isTutee, isTutor, isOwnAgenda]);
 
-  useEffect(async () => {
+  useEffect( () => {
     setShowAgenda(true)
+    console.log(events)
   }, [events]);
 
   const changeStatusAppointment = async (status) => {
@@ -303,7 +316,11 @@ export default function GoogleCalendarGrid(props) {
   return (
     <>
 
-     <Title>{t('Agenda.1')} </Title>
+     {isOwnAgenda? 
+     <Title>{t('Agenda.1')}</Title>
+     :
+     <Title>{t('Agenda.2')} {person}</Title>
+     }
      
       {showAgenda ?
       <FullCalendar 

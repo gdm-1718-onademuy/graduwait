@@ -379,15 +379,22 @@ const getDataF = async () => {
 }
 
 const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
-  console.log(who)
 
+  // TO DO -> ALS element.url zetten bij mensen waar het online doorgaat 
+    // als ze hier op klikken, zullen ze direct naar het internet gaan
   // * DATA ARRAY 
   const data = []
+  let userid
+  if(who === "own"){
+    userid = uid
+  } else {
+    userid = who
+  }
   
   if (isTutor){
   // hier alle appointments halen als user tutored
   await db.collection("tutoring")
-  .where("tutorid", "==", uid)
+  .where("tutorid", "==", userid)
   .get()
   .then((querySnapshot) => { 
     querySnapshot.forEach(function(doc) {
@@ -399,27 +406,53 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
       // use these variables for the colors
       const isconfirmed = doc.data().isconfirmed
 
-      element.id = doc.id
-      element.title = "bijles geven" //doc.data().title
-      element.start = longstart
-      element.end = longend
-      element.isconfirmed = isconfirmed
-      element.subjects = doc.data().subjectid
-      element.role = "tutor"
-      element.tuteeid = doc.data().studentid
-      element.tutorid = doc.data().tutorid
-      element.date = doc.data().date
-      element.starthour = doc.data().starthour
-      element.endhour = doc.data().endhour
-      element.location = doc.data().location
 
-      // color blue for TUTORING
-      if(isconfirmed){
-        element.color = '#00008b'
-      } else {
-        element.color = '#add8e6'
+      // als je de gegevens wilt van de eigen agenda
+      if(who === "own"){
+        element.title = "bijles geven" //doc.data().title
+        element.id = doc.id
+        element.start = longstart
+        element.end = longend
+        element.isconfirmed = isconfirmed
+        element.subjects = doc.data().subjectid
+        element.role = "tutor"
+        element.tuteeid = doc.data().studentid
+        element.tutorid = doc.data().tutorid
+        element.date = doc.data().date
+        element.starthour = doc.data().starthour
+        element.endhour = doc.data().endhour
+        element.location = doc.data().location
+        if(isconfirmed){
+          element.color = '#00008b'
+        } else {
+          element.color = '#add8e6'
+        }
+        data.push(element)
+        //data = doc.data()
+      } else { // de gegevens van de andere zijn agenda
+        // als ingelogde user bijles krijgt van deze persoon, dit niet opslaan want w al gerenderd
+        if (doc.data().studentid !== uid){
+          element.title = "" // geen titel, want "not available" gaat geprint worden
+          element.display = 'background'
+          element.editable = false
+          element.color = "grey"
+          element.start = longstart
+          element.end = longend
+          element.isconfirmed = isconfirmed
+          element.subjects = doc.data().subjectid
+          element.role = "tutor"
+          element.tuteeid = doc.data().studentid
+          element.tutorid = doc.data().tutorid
+          element.date = doc.data().date
+          element.starthour = doc.data().starthour
+          element.endhour = doc.data().endhour
+          element.location = doc.data().location
+          element.id = doc.id
+
+          data.push(element)
+        } 
       }
-      data.push(element)
+
       //data = doc.data()
     })
   })
@@ -428,7 +461,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
   if (isTutee){
   // hier als mens wordt getutored
   await db.collection("tutoring")
-  .where("studentid", "==", uid)
+  .where("studentid", "==", userid)
   .get()
   .then((querySnapshot) => { 
     querySnapshot.forEach(function(doc) {
@@ -440,34 +473,59 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
       // use these variables for the colors
       const isconfirmed = doc.data().isconfirmed
 
-      element.id = doc.id
-      element.title = "bijles krijgen" //doc.data().title
-      element.start = longstart
-      element.end = longend
-      element.isconfirmed = isconfirmed
-      element.subjects = doc.data().subjectid
-      element.role = "tutee"
-      element.tuteeid = doc.data().studentid
-      element.tutorid = doc.data().tutorid
-      element.date = doc.data().date
-      element.starthour = doc.data().starthour
-      element.endhour = doc.data().endhour
-      element.location = doc.data().location
+      if(who === "own"){
+        element.id = doc.id
+        element.title = "bijles krijgen" //doc.data().title
+        element.start = longstart
+        element.end = longend
+        element.isconfirmed = isconfirmed
+        element.subjects = doc.data().subjectid
+        element.role = "tutee"
+        element.tuteeid = doc.data().studentid
+        element.tutorid = doc.data().tutorid
+        element.date = doc.data().date
+        element.starthour = doc.data().starthour
+        element.endhour = doc.data().endhour
+        element.location = doc.data().location
+        // color purple for TUTORING
+        if(isconfirmed){
+          element.color = '#301934'
+        } else {
+          element.color = '#CBC3E3'
+        }
+        data.push(element)
 
-      // color purple for TUTORING
-      if(isconfirmed){
-        element.color = '#301934'
       } else {
-        element.color = '#CBC3E3'
+        // als ingelogde user bijles geeft aan deze persoon, dit niet opslaan want w al gerenderd
+        if (doc.data().tutorid !== uid){
+          element.id = doc.id
+          element.title = "" //geen titel, want "not available" gaat geprint worden
+          element.start = longstart
+          element.end = longend
+          element.isconfirmed = isconfirmed
+          element.subjects = doc.data().subjectid
+          element.role = "tutee"
+          element.tuteeid = doc.data().studentid
+          element.tutorid = doc.data().tutorid
+          element.date = doc.data().date
+          element.starthour = doc.data().starthour
+          element.endhour = doc.data().endhour
+          element.location = doc.data().location
+          element.display = 'background'
+          element.editable = false
+          element.color = "grey"
+          data.push(element)
+
+        }
       }
-      data.push(element)
-      //data = doc.data()
     })
   })
   }
 
   return data
 }
+
+
 
 // export alle functies
 export {

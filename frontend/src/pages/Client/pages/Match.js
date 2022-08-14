@@ -75,11 +75,11 @@ export default function Match() {
         // dit rerenderen?
     },[filter]);
 
-    const goToAgenda = (userid, name, subjectids) => {
-        // console.log(userid, name, subjectid)
+    const goToAgenda = (userid, name, subjectids, isTutor, isTutee) => {
+        console.log(userid, name, subjectids, isTutor, isTutee)
         navigate(
             '/agenda/' + userid,
-            {state: { userid: userid, person: name, subjectids: subjectids}}
+            {state: { userid: userid, person: name, subjectids: subjectids, isTutor:isTutor, isTutee: isTutee }}
             //{state: { bijlesKrijger: bijlesKrijgen, bijlesGever: bijlesGeven, richting: richting, location: value, firstName: firstName, lastName: lastName, email: email}}
           )
     }
@@ -508,7 +508,7 @@ export default function Match() {
                         </Grid>
       
                             <br />
-                        <Button onClick={() => goToAgenda("3mBoKVVbTAXyS4zgvm7pqQwsW9x1", "Olivier Huyse", ["LxcRRiHQhht0Aj5YRdvQ", "8WZvrVMNbqC1EvNPBTsy"])}>Boek een afspraak</Button>
+                        <Button onClick={() => goToAgenda("3mBoKVVbTAXyS4zgvm7pqQwsW9x1", "Olivier Huyse", ["LxcRRiHQhht0Aj5YRdvQ", "8WZvrVMNbqC1EvNPBTsy"], true /*isTutor*/, false /*istutee*/)}>Boek een afspraak</Button>
                     </Grid>
                 </Grid>
 
@@ -557,7 +557,7 @@ export default function Match() {
                                 </Grid>
               
                                     <br />
-                                <Button onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde)}>Boek een afspraak</Button>
+                                <Button onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde, item.isTutor, item.isTutee)}>Boek een afspraak</Button>
                             </Grid>
                         </Grid>
 
