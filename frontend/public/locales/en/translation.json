@@ -118,6 +118,14 @@
         "1": "Distance",
         "2": "km away",
         "3": "per hour",
-        "4": "Book an appointment" 
+        "4": "Book an appointment",
+        "5": "match(es) found",
+        "6": "Most matches",
+        "7": "Rate low to high",
+        "8": "Rate high to high",
+        "9": "Distance close to far",
+        "10": "Distance far to close",
+        "11": "Reviews best to worse",
+        "12": "Reviews worse to best"
     }
 }

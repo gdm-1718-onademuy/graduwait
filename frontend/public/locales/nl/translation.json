@@ -119,6 +119,14 @@
         "1": "Afstand",
         "2": "km verwijderd",
         "3": "per uur",
-        "4": "Boek een afspraak" 
+        "4": "Boek een afspraak" ,
+        "5": "match(es) gevonden",
+        "6": "Meeste matches",
+        "7": "Tarief oplopend",
+        "8": "Tarief aflopend",
+        "9": "Afstand dicht naar ver",
+        "10": "Afstand ver naar dicht",
+        "11": "Review aflopend",
+        "12": "Review oplopend"
     }
 }

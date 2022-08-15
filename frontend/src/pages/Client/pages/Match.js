@@ -170,15 +170,23 @@ export default function Match() {
         <>
             <LoggedIn/>
             <LayoutFull>
-            <Title> Er werd(en) {amountUsers} persoon/personen met matches gevonden in de buurt</Title>
-            <Button onClick={() => setFilter("MostMatches")}>Filter by most matches</Button>
-            <Button onClick={() => setFilter("PriceLowHigh")}>Filter by price low to high</Button>
-            <Button onClick={() => setFilter("PriceHighLow")}>Filter by price high to low</Button>
-            <Button onClick={() => setFilter("DistanceCloseFar")}>Filter by distance close to far</Button>
-            <Button onClick={() => setFilter("DistanceFarClose")}>Filter by distance far to close</Button>
-            <Button onClick={() => setFilter("ReviewBestWorse")}>Filter by reviews best to worse</Button>
-            <Button onClick={() => setFilter("ReviewWorseBest")}>Filter by reviews worse to best</Button>
-   
+            <Title> {amountUsers} {t('Match.5')}</Title>
+            <Paper sx={{
+                    p: 2,
+                    display: 'flex',
+                    flexDirection: 'row',
+                    //height: '10vh',
+                    overflow: 'auto',
+                    margin: "0 0 30px 0",
+                    }}>
+            <Button fullWidth variant="outlined" onClick={() => setFilter("MostMatches")}>{t('Match.6')}</Button>
+            <Button fullWidth variant="outlined" onClick={() => setFilter("PriceLowHigh")}>{t('Match.7')}</Button>
+            <Button fullWidth variant="outlined" onClick={() => setFilter("PriceHighLow")}>{t('Match.8')}</Button>
+            <Button fullWidth variant="outlined" onClick={() => setFilter("DistanceCloseFar")}>{t('Match.9')}</Button>
+            <Button fullWidth variant="outlined" onClick={() => setFilter("DistanceFarClose")}>{t('Match.10')}</Button>
+            <Button fullWidth variant="outlined" onClick={() => setFilter("ReviewBestWorse")}>{t('Match.11')}</Button>
+            <Button fullWidth variant="outlined" onClick={() => setFilter("ReviewWorseBest")}>{t('Match.12')}</Button>
+            </Paper>
                 {matches && matches.map((item, index) => 
                 (
                     <>
