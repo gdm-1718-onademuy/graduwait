@@ -9,7 +9,7 @@ import { TextField, Select, MenuItem, Checkbox, FormGroup, Grid, Modal, ButtonGr
 import Title from './Title';
 import {useTranslation} from 'react-i18next';
 import {
-  auth, editAppointment, getAppointmentsUser, getUserData
+  auth, editAppointment, getAppointmentsUser, getUserData, makeAppointment
 } from "../../../services/config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -127,6 +127,7 @@ export default function GoogleCalendarGrid(props) {
   const [location, setLocation] = useState("");
   const [possibleLocations, setPossibleLocations] = useState([{label:"Online", value:"online"}])
   const [scheduleAppointment, setScheduleAppointment] = useState(false)
+  const [rate, setRate] = useState()
 
 
   // modal
@@ -149,6 +150,7 @@ export default function GoogleCalendarGrid(props) {
       setSubjectids(props.subjectids)
       setOtherIsTutor(props.isTutor)
       setOtherIsTutee(props.isTutee)
+      setRate(props.rate)
       setIsOwnAgenda(false)
     } else {
       setIsOwnAgenda(true)
@@ -312,8 +314,9 @@ export default function GoogleCalendarGrid(props) {
   }, [scheduleAppointment]);
 
   const aanvraagTutor = async () => {
-    console.log("do request")
-    /*const bijlesVakken = []
+
+    //console.log("do request")
+    const bijlesVakken = []
     const vakkenIds = []
     const vakkenNamen = []
     if(checkedVakken){
@@ -334,7 +337,25 @@ export default function GoogleCalendarGrid(props) {
       vakkenNamen.push(subjectids[0].subject)
     }
     console.log("done")
-    setScheduleAppointment(false)*/
+
+    console.log(vakkenIds)
+
+    const tutorid = userid
+    const studentid = user.uid
+    const loggedinuser = await getUserData(user.uid)
+    const naam = loggedinuser.firstname + "" + loggedinuser.lastname
+    const datum = date
+
+    const afspraakid = await makeAppointment(tutorid, studentid, date, starthour, endhour, vakkenIds, opmerking, location)
+    console.log(afspraakid)
+    //sendMailAfspraak(naam, bijlesVakken, datum, opmerking, rate, starthour, endhour, afspraakid)
+    
+    //getEvents()
+    //handleClose()
+    //setScheduleAppointment(false)*/
+
+   // makeAppointment()
+
   }
 
   const handleChange = (event) => {
@@ -473,7 +494,7 @@ export default function GoogleCalendarGrid(props) {
                     id={item.subjectid}
                     checked={checkedVakken[item.subjectid]}
                     onChange={handleChange}
-                    defaultChecked
+                    //defaultChecked
                     />
                   } 
                   label={item.subject} />
@@ -769,7 +790,7 @@ export default function GoogleCalendarGrid(props) {
                             id={item.subjectid}
                             checked={checkedVakken[item.subjectid]}
                             onChange={handleChange}
-                            defaultChecked
+                            //defaultChecked
                             />
                           } 
                           label={item.subject} />
@@ -800,7 +821,6 @@ export default function GoogleCalendarGrid(props) {
                     />
                   </Grid>
             </Grid>
-            <Box component="form" onSubmit={aanvraagTutor} noValidate sx={{ mt: 1 }}>
             <Button
               type="submit"
               fullWidth
@@ -810,7 +830,6 @@ export default function GoogleCalendarGrid(props) {
             >
               {t('Afspraak.18')}
             </Button>
-            </Box>
           </>
           :
           <DataEvent/>

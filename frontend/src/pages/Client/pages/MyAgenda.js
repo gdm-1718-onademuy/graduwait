@@ -57,7 +57,7 @@ export default function MyAgenda() {
         {!location.state?
         <GoogleCalendarGrid />
         :
-        <GoogleCalendarGrid userid = {location.state.userid} person={location.state.person} subjectids={location.state.subjectids} isTutor = {location.state.isTutor} isTutee = {location.state.isTutee} />
+        <GoogleCalendarGrid userid = {location.state.userid} person={location.state.person} subjectids={location.state.subjectids} isTutor = {location.state.isTutor} isTutee = {location.state.isTutee} rate = {location.state.rate} />
         }
         </Paper>
       </Grid>

@@ -81,11 +81,11 @@ export default function Match() {
         // dit rerenderen?
     },[filter]);
 
-    const goToAgenda = (userid, name, subjectids, isTutor, isTutee) => {
-        console.log(userid, name, subjectids, isTutor, isTutee)
+    const goToAgenda = (userid, name, subjectids, isTutor, isTutee, rate) => {
+        console.log(userid, name, subjectids, isTutor, isTutee, rate)
         navigate(
             '/agenda/' + userid,
-            {state: { userid: userid, person: name, subjectids: subjectids, isTutor:isTutor, isTutee: isTutee }}
+            {state: { userid: userid, person: name, subjectids: subjectids, isTutor:isTutor, isTutee: isTutee, rate: rate }}
             //{state: { bijlesKrijger: bijlesKrijgen, bijlesGever: bijlesGeven, richting: richting, location: value, firstName: firstName, lastName: lastName, email: email}}
           )
     }
@@ -231,7 +231,7 @@ export default function Match() {
                                 </Grid>
               
                                     <br />
-                                <Button onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde, item.isTutor, item.isTutee)}>Boek een afspraak</Button>
+                                <Button onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde, item.isTutor, item.isTutee, item.price)}>Boek een afspraak</Button>
                             </Grid>
                         </Grid>
 

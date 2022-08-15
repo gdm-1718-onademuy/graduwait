@@ -157,7 +157,7 @@ const addKostUser = async (uid, kost) => {
 
 // AGENDA FUNCTIONALITIES
 // add an appointment
-const addAfspraak = async (tutorid, studentid, date, starthour, endhour, vakkenIds, opmerking, location) => {
+const makeAppointment = async (tutorid, studentid, date, starthour, endhour, vakkenIds, opmerking, location) => {
     const today = new Date(); 
 
     let afspraak_id 
@@ -189,6 +189,8 @@ const addAfspraak = async (tutorid, studentid, date, starthour, endhour, vakkenI
     })
     return afspraak_id
 };
+
+
 
 // edit appointments (delete or confirm)
 const editAppointment = async (todo, eventid) => {
@@ -567,7 +569,6 @@ export {
     signInWithEmailAndPassword,
     registerWithEmailAndPassword,
     logout,
-    addAfspraak,
     editAppointment,
     addDataUser,
     getMatchingUsers,
@@ -580,5 +581,6 @@ export {
     addKostUser,
     getAppointmentsUser,
     getAllUsers,
-    getSubjectById
+    getSubjectById,
+    makeAppointment
   };

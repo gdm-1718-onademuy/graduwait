@@ -12,7 +12,6 @@ import Forgot from './pages/auth/Forgot.js';
 
 import Dashboard from './pages/Client/pages/Dashboard.js';
 import MyAgenda from './pages/Client/pages/MyAgenda.js';
-import Agenda from './pages/Client/pages/Agenda.js';
 import History from './pages/Client/pages/History.js';
 import Info from './pages/Client/pages/Info.js';
 import Payment from './pages/Client/pages/Payment.js';
