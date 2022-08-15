@@ -109,9 +109,10 @@ app.post('/sendAppointmentConfirmation', cors(), (req, res) => {
 
 
   const data = JSON.stringify({
-    "api_key": "api-00580A8A6E3411EC94A5F23C91BBF4A0",
+    //"api_key": "api-00580A8A6E3411EC94A5F23C91BBF4A0",
+    "api_key": process.env.SMPT_API_KEY,
     "to": [`${naam} <${emailTutor}>`],
-    "sender": "Ona Demuytere <ona.demuytere@student.arteveldehs.be>",
+    "sender": "Graduwait <info.graduwait@gmail.com>",
     "template_id": "2214556",
     "template_data": {
       
