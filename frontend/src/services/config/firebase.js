@@ -248,6 +248,19 @@ const getUserData = async(userid) => {
   return data
 };
 
+const getSubjectById = async(subjectid) => {
+  let data 
+
+  await db.collection("subject")
+  .doc(subjectid)
+  .get()
+  .then((querySnapshot) => {
+    data = querySnapshot.data()
+  })
+
+  return data
+};
+
 const changeTutoring = async(uid, toDo) => {
   let objectChange = {}
   let data 
@@ -357,6 +370,23 @@ const getMatchingUsers = (userid) => {
           }
     })})
   return usersGiveTutoring
+  //return courses
+}
+
+const getAllUsers = async () => {
+  // make a variable with all users where 
+  //  giveTutoring - array with minimum 1 value
+  let allUsers = []
+  
+  await db
+  .collection("users")
+  .get()
+  .then((querySnapshot) => { 
+    querySnapshot.forEach(function(doc) {
+      allUsers.push(doc.data())
+        
+    })})
+  return allUsers
   //return courses
 }
 
@@ -548,5 +578,7 @@ export {
     getReviews,
     changeTutoring,
     addKostUser,
-    getAppointmentsUser
+    getAppointmentsUser,
+    getAllUsers,
+    getSubjectById
   };

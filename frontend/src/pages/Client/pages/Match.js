@@ -3,7 +3,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import sortArray from 'sort-array'
 import { Avatar, Paper, TableRow, TableHead, TableCell, TableBody, Typography, CardContent, Button, CssBaseline, Box, Container, Grid} from '@mui/material';
-import { auth, db, getUserData } from "../../../services/config/firebase";
+import { auth, db, getUserData, getSubjectById, getAllUsers } from "../../../services/config/firebase";
 import {useTranslation} from 'react-i18next';
 import EuroIcon from '@mui/icons-material/Euro';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -19,7 +19,6 @@ import Title from '../components/Title';
 
 // functions 
 import { checkDistance /*, getTutors, loadMapApi, loadTheScript, loadScript */} from '../../../services/functions/matching';
-
 
 export default function Match() {
     const [tutors, setTutors] = useState([])
@@ -91,265 +90,6 @@ export default function Match() {
           )
     }
 
-  /*const getUserById = async () => {
-    // * CREATE FETCH DATA OBJECT 
-    let fetchData = {
-      crossDomain: false,
-      method: 'POST',
-      body: JSON.stringify({ 
-          uid: user.uid, 
-          js:true
-      }),
-      headers: {
-          "Content-Type": "application/json",
-      }
-    }
-
-    await fetch("/get-user-by-uid", fetchData)
-    .then(response => response.json())
-    .then((data) => {
-        setUserInformation(data)
-    })
-    .catch((error) => {
-        setUserInformation(error)
-    })
-  }*/
-
-    /*useEffect(() => {
-        if (user){
-            setArraySubjects(location.state.dataKrijgen)
-            console.log(location.state.dataKrijgen)
-            //getUserById()
-        }
-        //findMatches(["3ot8CYJzwrehJEVGMUpl", "B2VBvQVb2VTgnlNCDux2", "LxcRRiHQhht0Aj5YRdvQ", "j4YpDs8BWvpubjl1P8Eb"])
-    }, [user, loading]);
-
-    useEffect(() => {
-        console.log(userInformation) // eigenlijk niet nodig, dan krijg je server kant data
-    }, [userInformation]);
-
-    useEffect(() => {
-        if (arraySubjects.length > 0){
-            getLatLngLoggedIn()
-        }
-    }, [arraySubjects]);
-
-    useEffect(() => {
-        if (lngLoggedIn ){
-            getAllUsers()
-        }
-    }, [lngLoggedIn]);
-
-    useEffect(() => {
-        if (allUsers.length>0 ){
-            // do per user this
-            getUsersWhoTutor()
-        }
-    }, [allUsers]);
-
-
-
-    useEffect(() => {
-        if (arrayGiveTutoring.length > 0){
-            console.log(arrayGiveTutoring)
-            part3()
-        }
-    }, [arrayGiveTutoring]);
-
-    useEffect(() => {
-        part4()
-    }, [vakkenZelfde]);
-
-    useEffect(() => {
-        console.log(allUsers)
-    }, [allUsers]);
-
-    useEffect(() => {
-        console.log(vakkenZelfde)
-    }, [vakkenZelfde]);
-
-
-    const getLatLngLoggedIn = async () => {
-        await db.collection("users").where("uid", "==", user.uid)
-            .get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    // console.log(doc.id, " => ", doc.data());
-                    setLatLoggedIn(doc.data().latlng._lat)
-                    setLngLoggedIn(doc.data().latlng._long)
-                });
-            })
-            .catch((error) => {
-                // console.log("Error getting ddocumednts: ", error);
-            });
-    }
-
-    const getAllUsers = async () => {
-        //setAmountUsers(0)
-        // alle users overlopen en tijdelijk opslaan in docDataUid
-         // als deze uid niet zelfde is als ingelogde, ga verder
-          // als deze user bijles GEEFT, ga verder
-           // 
-        const data = []
-        await db
-        .collection("users")
-        .get()
-        .then((querySnapshot) => { 
-            if (user.uid !== null){
-                //for (const shot of querySnapshot) {
-                querySnapshot.forEach(function(doc) {
-                    data.push(doc.data())
-        })}})
-        setAllUsers(data)
-    }
-
-    const getUsersWhoTutor = async () => {
-        //setAmountUsers(0)
-        // alle users overlopen en tijdelijk opslaan in docDataUid
-         // als deze uid niet zelfde is als ingelogde, ga verder
-          // als deze user bijles GEEFT, ga verder
-           // 
-        const data = []
-        for (const u of allUsers) {
-            // if user is not signed in user && user is tutor && has selected minimum 1 subject
-            if (u.uid !== user.uid && u.giveTutoring && u.giveTutoring.length > 0){
-                console.log(u.firstname)
-                console.log(u.giveTutoring)
-                //setInfoUserMatch({"name": "ona"})
-                setArrayGiveTutoring(u.giveTutoring)
-                setDocDataUid(u.uid)
-
-
-                /*var infoUMatch = {}
-                infoUMatch.id = u.uid
-                infoUMatch.person = u.firstname + " " + u.lastname
-                infoUMatch.uid = u.uid
-                infoUMatch.avatar = u.avatar
-                //infoUserMatch.vakkenZelfde = vakkenZelfde
-                infoUMatch.price = u.kost
-                infoUMatch.distance = checkDistance(u.latlng._lat, u.latlng._long, latLoggedIn, lngLoggedIn) // hier eig met latLoggedIn en letLoggedIn
-                console.log(infoUMatch)
-                //data.push(element)
-                setArrayGiveTutoring(u.giveTutoring)
-                //setInfoUserMatch(infoUMatch)
-
-            }
-        }
-    }
-
-    const part3 = async () => {
-        console.log("part3")
-        console.log(arrayGiveTutoring)
-        let map = {};
-        arraySubjects.forEach(i => map[i] = false);
-        arrayGiveTutoring.forEach(i => map[i] === false && (map[i] = true));
-        for (const property in map) {
-            if (map[property] === true){
-                console.log(property, "dit is hetzelfde")
-                //count++;
-                console.log(vakkenNewZelfde)
-                console.log(amountMatches)
-
-                // aantal matches toevoegen met 1 als het erin voorkomt
-                setAmountMatches(amountMatches+1)
-                // dezelfde vakken bundelen in array state vakkenNewZelfde, dit per user
-                setVakkenNewZelfde(vakkenNewZelfde => vakkenNewZelfde.concat(property))
-                //vakkenNewZelfde.push(property)
-
-                console.log(amountMatches, vakkenNewZelfde)
-
-                // object maken met de info van dezelfde vakken
-                const vakkenElement = {}
-                vakkenElement.subjectid = property // de id van het vak
-                db
-                .collection("subject")
-                .doc(property) // de doc bekijken van het subject om extra info op te halen
-                .get()
-                .then((querySnapshot) => { 
-                    //console.log("zelfde vak", querySnapshot.data().subject)
-                    console.log("vak met info", querySnapshot.data())
-                    vakkenElement.subject = querySnapshot.data().subject
-                    vakkenElement.field = querySnapshot.data().field
-                    vakkenElement.info_en = querySnapshot.data().info_en
-                    vakkenElement.info_nl = querySnapshot.data().info_nl
-                    console.log(vakkenElement)
-                    setVakkenZelfde(vakkenZelfde => vakkenZelfde.concat(vakkenElement))
-
-                })
-                // het vak toevoegen aan 'vakkenzelfde' element
-
-                    //vakkenZelfde.push(vakkenElement)
-                    //setVakkenZelfde(vakkenZelfde.concat(vakkenElement))
-                    // save all data of each user
-                    /*db.collection("users").where("uid", "==", docDataUid).get()
-                    .then((querySnapshot) => {
-                        querySnapshot.forEach((doc) => {
-                            // doc.data() is never undefined for query doc snapshots
-                            // console.log(doc.id, " => ", doc.data());
-                            var element = {}
-                            element.id = doc.id
-                    })})
-
-
-
-                
-            }
-        }
-        //const infoUserMatch = {}
-        //setInfoUserMatch()
-        //infoUserMatch.aantal = amountMatches
-        //infoUserMatch.vakkenZelfde = vakkenZelfde
-        //element.aantal = count
-
-        //setVakkenZelfde([])
-
-        
-    }
-
-    const part4 = async () => {
-        console.log(amountMatches)
-        console.log(vakkenZelfde)
-        if (amountMatches > 0){
-            //aantalUsers++;
-            setAmountUsers(amountUsers+1)
-            // console.log("potentiële tutor met naam:" + doc.data().firstname )
-            const data = []
-            // save all data of each user
-            console.log(docDataUid)
-            db.collection("users").where("uid", "==", docDataUid).get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    // console.log(doc.id, " => ", doc.data());
-                    var element = {}
-                    element.id = doc.id
-                    element.aantal = amountMatches
-                    element.person = doc.data().firstname + " " + doc.data().lastname
-                    element.uid = docDataUid
-                    element.avatar = doc.data().avatar
-                    element.vakkenZelfde = vakkenZelfde
-                    element.price = doc.data().kost
-                    element.distance = checkDistance(doc.data().latlng._lat,doc.data().latlng._long , latLoggedIn, lngLoggedIn) // hier eig met latLoggedIn en letLoggedIn
-                    element.distanceInKm = Math.round(element.distance *100) /100 
-                    //console.log(element)
-                    data.push(element)
-                });
-            })
-            .catch((error) => {
-                // console.log("Error getting ddocumednts: ", error);
-                console.log("errorrr, not working")
-            });
-            console.log(data)
-            setMatches(matches => matches.concat(data))
-            console.log('match')
-        }
-        
-    }*/
-
-
-
-
     const findMatches = async (arraySubjects) => {
         //setArraySubjects(arraySubjects)
         // eerst lat en long halen van de ingelogde user
@@ -358,87 +98,66 @@ export default function Match() {
         let lng_loggedin = geopoints.latlng._long
 
         let aantalUsers = 0
-        await db
-        .collection("users")
-        .get()
-        .then((querySnapshot) => { 
-            if (user.uid !== null){
-                querySnapshot.forEach(function(doc) {
-                //setDocDataUid(doc.data().uid)
-                //if(user){
-                //console.log(doc.data().uid, user.uid)
-                if(doc.data().uid === user.uid ){
-                    // console.log("zelfde user, niks doen")
-                } else {
-                    //console.log("andere user", doc.data().firstname)
-                    if (doc.data().giveTutoring) {
-                        if (doc.data().giveTutoring.length > 0) {
-                            // dit zijn de potentiële tutors
-                            let count = 0
-                            let vakkenZelfde = []
-                            let vakkenNewZelfde = []
-                            let arrayGiveTutoring = doc.data().giveTutoring
-                            // console.log(arraySubjects, arrayGiveTutoring)
-                            let map = {};
-                            arraySubjects.forEach(i => map[i] = false);
-                            arrayGiveTutoring.forEach(i => map[i] === false && (map[i] = true));
-                            for (const property in map) {
-                                if (map[property] === true){
-                                    count++;
-                                    vakkenNewZelfde.push(property)
+        const data = []
+        const allUsers = await getAllUsers()
+        //console.log(allUsers[0])
+        for (const u in allUsers) {
+            const usr = allUsers[u]
+            if(allUsers[u].uid !== user.uid && allUsers[u].giveTutoring){
+                if(allUsers[u].giveTutoring.length > 0){
+                    //console.log(usr)
 
-                                    const vakkenElement = {}
-                                    vakkenElement.subjectid = property
-                                    db
-                                    .collection("subject")
-                                    .doc(property)
-                                    .get()
-                                    .then((querySnapshot) => { 
-                                        //console.log("zelfde vak", querySnapshot.data().subject)
-                                        vakkenElement.subject = (querySnapshot.data().subject)
-                                        vakkenElement.field = (querySnapshot.data().field)
-                                        vakkenZelfde.push(vakkenElement)
-                                    })
-                                }
-                            }
-                            if (count > 0){
-                                aantalUsers++;
-                                setAmountUsers(aantalUsers)
-                                // console.log("potentiële tutor met naam:" + doc.data().firstname )
-                                const data = []
-                                // save all data of each user
-                                db.collection("users").where("uid", "==", doc.data().uid).get()
-                                .then((querySnapshot) => {
-                                    querySnapshot.forEach((doc) => {
-                                        // doc.data() is never undefined for query doc snapshots
-                                        // console.log(doc.id, " => ", doc.data());
-                                        var element = {}
-                                        element.id = doc.id
-                                        element.aantal = count
-                                        element.person = doc.data().firstname + " " + doc.data().lastname
-                                        element.uid = doc.data().uid
-                                        element.avatar = doc.data().avatar
-                                        element.vakkenZelfde = vakkenZelfde
-                                        element.price = doc.data().kost
-                                        element.distance = checkDistance(doc.data().latlng._lat,doc.data().latlng._long , lat_loggedin, lng_loggedin) // hier eig met latLoggedIn en letLoggedIn
-                                        console.log(element)
-                                        data.push(element)
-                                    });
-                                })
-                                .catch((error) => {
-                                    // console.log("Error getting ddocumednts: ", error);
-                                });
-                                setMatches(data)
-                                console.log('match')
-                            }
-                            
-                            
+                    let count = 0
+                    let vakkenZelfde = []
+                    let vakkenNewZelfde = []
+                    let arrayGiveTutoring = allUsers[u].giveTutoring
+                    // console.log(arraySubjects, arrayGiveTutoring)
+                    let map = {};
+                    arraySubjects.forEach(i => map[i] = false);
+                    arrayGiveTutoring.forEach(i => map[i] === false && (map[i] = true));
+                    for (const property in map) {
+                        if (map[property] === true){
+                            count++;
+                            vakkenNewZelfde.push(property)
+
+                            const subjectdata = await getSubjectById(property)
+
+                            const vakkenElement = {}
+                            vakkenElement.subjectid = property
+                            vakkenElement.subject = subjectdata.subject
+                            vakkenElement.field = subjectdata.field
+                            vakkenZelfde.push(vakkenElement)
                         }
                     }
+                    if (count > 0){
+                        aantalUsers++;
+                        setAmountUsers(aantalUsers)
+                        // console.log("potentiële tutor met naam:" + doc.data().firstname )
+                        //const data = []
+                        // save all data of each user
+                        const specificuser = await getUserData(usr.uid)
+                        var element = {}
+                        element.id = specificuser.uid
+                        element.aantal = count
+                        element.person = specificuser.firstname + " " + specificuser.lastname
+                        element.uid = specificuser.uid
+                        element.avatar = specificuser.avatar
+                        element.vakkenZelfde = vakkenZelfde
+                        element.price = specificuser.kost
+                        element.distance = checkDistance(specificuser.latlng._lat,specificuser.latlng._long , lat_loggedin, lng_loggedin) // hier eig met latLoggedIn en letLoggedIn
+                        console.log(element)
+                        data.push(element)
+                        //setMatches(matches => matches.concat(data))
+                        
+                    }
                 }
-                })
             }
-    })    
+        }
+    setMatches(data)
+    console.log('match')
+
+
+     
    //set data in state heres
     //setFilter("MostMatches")
     }
@@ -459,54 +178,7 @@ export default function Match() {
             <Button onClick={() => setFilter("DistanceFarClose")}>Filter by distance far to close</Button>
             <Button onClick={() => setFilter("ReviewBestWorse")}>Filter by reviews best to worse</Button>
             <Button onClick={() => setFilter("ReviewWorseBest")}>Filter by reviews worse to best</Button>
-
-                <p>Matches willen niet printen, maar wel als je een filter instelt:</p>
-                {matches.length > 0 ?
-                    console.log(matches)
-                :
-                    console.log("no matches")
-                }
-                  <CardContent key="1">
-                    <Grid container spacing={3}>
-                    <Grid item >
-
-                    <Avatar
-                        alt="Olivier"
-                        //src={item.avatar}
-                        sx={{ 
-                            width: 150, 
-                            height: 150,
-                        }}
-                        />
-                    </Grid>
-                    <Grid item>
-                        <Typography variant="h5" component="div">
-                            Olvier Huyse
-                        </Typography>
-                        <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                            2 match(es)
-                        </Typography>
-
-
-                        <Grid container spacing={2}>
-                            <Grid item xs={8}>
-                                <p><EuroIcon/>18 {t('Match.3')}</p>
-                                <p><LocationOnIcon/> 17 {t('Match.2')}</p>
-                                <p><Rating name="read-only" value={3} readOnly /></p>
-                            </Grid>
-
-                            <Grid item xs={4}>
-                            <p>"LxcRRiHQhht0Aj5YRdvQ"</p>
-                            <p>"8WZvrVMNbqC1EvNPBTsy"</p>
-                            </Grid>
-                        </Grid>
-      
-                            <br />
-                        <Button onClick={() => goToAgenda("3mBoKVVbTAXyS4zgvm7pqQwsW9x1", "Olivier Huyse", [{subjectid:"LxcRRiHQhht0Aj5YRdvQ", subject: "Javascript", field: "Development"}, {subjectid: "8WZvrVMNbqC1EvNPBTsy", subject: "PHP", field:"Development"}], true /*isTutor*/, false /*istutee*/)}>Boek een afspraak</Button>
-                    </Grid>
-                </Grid>
-
-                </CardContent>
+   
                 {matches && matches.map((item, index) => 
                 (
                     <>
