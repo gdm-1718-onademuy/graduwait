@@ -195,9 +195,16 @@ export default function GoogleCalendarGrid(props) {
       getTomorrowsDate()
       const userData = await getUserData(user.uid)
       if(userData.meetingsAddress){
-        const checkLabel = obj => obj.label === 'tutee'
-        console.log(!possibleLocations.some(checkLabel))
-        if(!possibleLocations.some(checkLabel)){
+        //const checkLabel = obj => obj.label === 'tutee'
+        const isFound = possibleLocations.some(element => {
+          if (element.value === "tutee") {
+            return true;
+          } else 
+          return false
+        })
+        //console.log(!possibleLocations.some(checkLabel))
+        //if(!possibleLocations.some(checkLabel)){
+        if(!isFound){
           setPossibleLocations(possibleLocations => possibleLocations.concat({label:t('Afspraak.16'), value:"tutee"}))
         }
       }
@@ -237,10 +244,16 @@ export default function GoogleCalendarGrid(props) {
     if (userid){
       const userData = await getUserData(userid)
       if(userData.meetingsAddress){
-        const checkLabel = obj => obj.label === 'tutor'
-        console.log(!possibleLocations.some(checkLabel))
-
-        if(!possibleLocations.some(checkLabel)){
+        const isFound = possibleLocations.some(element => {
+          //console.log(element.value)
+          if (element.value === "tutor") {
+            return true;
+          } else 
+          return false
+        })
+        //console.log(!possibleLocations.some(checkLabel))
+        //if(!possibleLocations.some(checkLabel)){
+        if(!isFound){
           setPossibleLocations(possibleLocations => possibleLocations.concat({label:t('Afspraak.17'), value:"tutor"}))
         }
       }
