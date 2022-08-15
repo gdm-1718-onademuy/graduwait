@@ -129,7 +129,9 @@ export default function GoogleCalendarGrid(props) {
   const [scheduleAppointment, setScheduleAppointment] = useState(false)
   const [rate, setRate] = useState()
   const [emailTutor, setEmailTutor] = useState()
-  const [openSnackbar, setOpenSnackBar] = React.useState(false);
+  const [tuteeName, setTuteeName] = useState()
+  const [tutorName, setTutorName] = useState()
+  const [openSnackbar, setOpenSnackBar] = useState(false);
 
 
   // modal
@@ -166,9 +168,16 @@ export default function GoogleCalendarGrid(props) {
         return event.id === appointmentId
       })
       setAppointmentDetails(detailData)
-      /*var result = events.filter(event => {
-        return event.id === appointmentId
-      })*/
+
+      const tuteeData = await getUserData(detailData.tuteeid)
+      const tutorData = await getUserData(detailData.tutorid)
+      if (tutorData && tuteeData){
+        //console.log(tuteeData.firstname, tuteeData.lastname)
+        setTuteeName(tuteeData.firstname + " " + tuteeData.lastname)
+        setTutorName(tutorData.firstname + " " + tutorData.lastname)
+
+      }
+
     }
   }, [appointmentId]);
 
@@ -435,7 +444,7 @@ export default function GoogleCalendarGrid(props) {
       </Grid>
 
       <Grid item xs={8}>  
-      {person}
+      {tutorName}
       </Grid>
 
       <Grid item xs={4}>  
@@ -612,14 +621,14 @@ export default function GoogleCalendarGrid(props) {
          {t('Profile.6')}
           </Grid>
           <Grid item xs={8}>  
-          {appointmentDetails.tuteeid}
+          {tuteeName}
           </Grid>
 
          <Grid item xs={4}>  
          {t('Profile.5')}
           </Grid>
           <Grid item xs={8}>  
-          {appointmentDetails.tutorid}
+          {tutorName}
           </Grid>
 
           <Grid item xs={4}>  
