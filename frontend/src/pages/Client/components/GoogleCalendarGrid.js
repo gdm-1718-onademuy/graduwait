@@ -126,6 +126,7 @@ export default function GoogleCalendarGrid(props) {
   const [errorForm, setErrorForm] = useState("");
   const [location, setLocation] = useState("");
   const [possibleLocations, setPossibleLocations] = useState([{label:"Online", value:"online"}])
+  const [scheduleAppointment, setScheduleAppointment] = useState(false)
 
 
   // modal
@@ -165,6 +166,7 @@ export default function GoogleCalendarGrid(props) {
       })*/
     }
   }, [appointmentId]);
+
   useEffect( () => {
     console.log(open)
   }, [open]);
@@ -232,8 +234,6 @@ export default function GoogleCalendarGrid(props) {
   }, [isTutee, isTutor, isOwnAgenda, user]);
 
   useEffect( async () => {
-    let newLocation
-
     if (userid){
       const userData = await getUserData(userid)
       if(userData.meetingsAddress){
@@ -260,6 +260,7 @@ export default function GoogleCalendarGrid(props) {
     setShowAgenda(true)
     console.log(events)
   }, [person]);
+
 
   const changeStatusAppointment = async (status) => {
     //console.log(status)
@@ -291,9 +292,36 @@ export default function GoogleCalendarGrid(props) {
 
     //handleOpen()
   }
+  useEffect( () => {
+    if (scheduleAppointment){
+      aanvraagTutor()
+    }
+  }, [scheduleAppointment]);
 
-  const aanvraagTutor = () => {
-    console.log("let's book")
+  const aanvraagTutor = async () => {
+    console.log("do request")
+    /*const bijlesVakken = []
+    const vakkenIds = []
+    const vakkenNamen = []
+    if(checkedVakken){
+      Object.keys(checkedVakken).map(function(key, index) {
+        if(checkedVakken[key] === true){
+          subjectids.map((item) => {
+            if(key === item.subjectid){
+              bijlesVakken.push(item)
+              vakkenIds.push(item.subjectid)
+              vakkenNamen.push(item.subject)
+            }
+          })
+        }
+      })
+    } else {
+      bijlesVakken.push(subjectids[0])
+      vakkenIds.push(subjectids[0].subjectid)
+      vakkenNamen.push(subjectids[0].subject)
+    }
+    console.log("done")
+    setScheduleAppointment(false)*/
   }
 
   const handleChange = (event) => {
@@ -462,18 +490,17 @@ export default function GoogleCalendarGrid(props) {
               //sx={{ width: 1000 }}
             />
           </Grid>
-    </Grid>
-    <Box component="form" onSubmit={aanvraagTutor} noValidate sx={{ mt: 1 }}>
+
     <Button
       type="submit"
       fullWidth
       variant="contained"
       sx={{ mt: 3, mb: 2 }}
-      onClick={() => aanvraagTutor}
+      onClick={() => setScheduleAppointment(true)}
     >
       {t('Afspraak.18')}
     </Button>
-    </Box>
+    </Grid>
   </>
 
   )
@@ -713,12 +740,11 @@ export default function GoogleCalendarGrid(props) {
                 })}
               </Select>
               </Grid>
-        
                   <Grid item xs={4}>  
                   {t('Afspraak.6')}
                   </Grid>
         
-                    { subjectids.length > 1 ? 
+                    { subjectids && subjectids.length > 1 ? 
         
                        <Grid item xs={8}>
                         <FormGroup>
@@ -767,7 +793,7 @@ export default function GoogleCalendarGrid(props) {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
-              onClick={() => aanvraagTutor}
+              onClick={aanvraagTutor}
             >
               {t('Afspraak.18')}
             </Button>
