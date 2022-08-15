@@ -348,13 +348,38 @@ export default function GoogleCalendarGrid(props) {
 
     const afspraakid = await makeAppointment(tutorid, studentid, date, starthour, endhour, vakkenIds, opmerking, location)
     console.log(afspraakid)
-    //sendMailAfspraak(naam, bijlesVakken, datum, opmerking, rate, starthour, endhour, afspraakid)
+    sendMailAfspraak(naam, bijlesVakken, datum, opmerking, rate, starthour, endhour, afspraakid, location)
     
     //getEvents()
     //handleClose()
     //setScheduleAppointment(false)*/
 
    // makeAppointment()
+
+  }
+
+  const sendMailAfspraak = async (naam, bijlesVakken, datum, opmerking, prijs, starthour, endhour, afspraakid, location) => {
+    const respObject = {naam, bijlesVakken, datum, opmerking, prijs, starthour, endhour, afspraakid, location}
+
+    const fetchData = {
+      crossDomain: false,
+      method: 'POST',
+      body: JSON.stringify(respObject),
+      headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"  
+      },
+      credentials: 'include',
+      }
+
+     await fetch("/sendAppointmentConfirmation", fetchData)
+      .then(() => {
+          console.log("gelukt om te sturen")
+          //setOpenSnackBar(true);
+
+      })
+
+      
 
   }
 
