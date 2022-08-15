@@ -93,7 +93,7 @@ app.post('/update-password', async (req, res) => {
 // ORDER CONFIG MAIL  
 app.post('/sendAppointmentConfirmation', cors(), (req, res) => {
 
-  const { naam, bijlesVakken, datum, opmerking, prijs, starthour, endhour, afspraakid, location, emailTutor } = req.body
+  const { naam, vakkenNamen, datum, opmerking, prijs, starthour, endhour, afspraakid, location, emailTutor } = req.body
   const url = "https://api.smtp2go.com/v3/email/send"
   const xhr = new XMLHttpRequest()
 
@@ -120,10 +120,10 @@ app.post('/sendAppointmentConfirmation', cors(), (req, res) => {
     "date":datum,
     "starthour":starthour,
     "endhour":endhour,
-    "subjects":bijlesVakken,
+    "subjects":vakkenNamen,
     "opmerking":opmerking,
     //"confirm_url":`http://localhost:3000/agenda/myagenda/${afspraakid}`,
-    "confirm_url":`http://localhost:3000/dashboard`,
+    "confirm_url":`https://graduwait-4g3l4.ondigitalocean.app/dashboard`,
     "price":prijs, 
     //"location": location
     },

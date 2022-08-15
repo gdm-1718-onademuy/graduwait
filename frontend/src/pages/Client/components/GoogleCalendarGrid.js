@@ -102,8 +102,8 @@ export default function GoogleCalendarGrid(props) {
   const [fullname, setFullname] = useState()
   const [firstname, setFirstname] = useState()
   const [vakken, setVakken] = useState([])
-  const [isTutor, setIsTutor] = useState(false)
-  const [isTutee, setIsTutee] = useState(false)
+  const [isTutor, setIsTutor] = useState("")
+  const [isTutee, setIsTutee] = useState("")
   const [popUpDetail, setPopUpDetail] = useState(false)
   const [appointmentId, setAppointmentId] = useState("")
   const [appointmentDetails, setAppointmentDetails] = useState()
@@ -295,18 +295,21 @@ export default function GoogleCalendarGrid(props) {
   }
 
   const addAppointment = (arg) => {
-    console.log(arg)
-    const month = String(arg.date.getMonth() + 1).padStart(2, '0');
-    const day = String(arg.date.getDate()).padStart(2, '0')
-    setModalAppointment(true)
-    setOpen(true)
-
-    const startHour = String(arg.date.getHours()).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0')
-    const endHour = String(arg.date.getHours()+1).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0')
-    setDate(arg.date.getFullYear() + "-" + month + "-" + day)
-    setStarthour(String(arg.date.getHours()).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
-    setEndhour(String(arg.date.getHours()+1).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
-
+    if (!isOwnAgenda){
+      console.log(arg)
+      const month = String(arg.date.getMonth() + 1).padStart(2, '0');
+      const day = String(arg.date.getDate()).padStart(2, '0')
+      setModalAppointment(true)
+      setOpen(true)
+  
+      const startHour = String(arg.date.getHours()).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0')
+      const endHour = String(arg.date.getHours()+1).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0')
+      setDate(arg.date.getFullYear() + "-" + month + "-" + day)
+      setStarthour(String(arg.date.getHours()).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
+      setEndhour(String(arg.date.getHours()+1).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
+  
+  
+    }
 
     //handleOpen()
   }
@@ -351,7 +354,7 @@ export default function GoogleCalendarGrid(props) {
 
     const afspraakid = await makeAppointment(tutorid, studentid, date, starthour, endhour, vakkenIds, opmerking, location)
     console.log(afspraakid)
-    sendMailAfspraak(naam, bijlesVakken, datum, opmerking, rate, starthour, endhour, afspraakid, location)
+    sendMailAfspraak(naam, vakkenNamen, datum, opmerking, rate, starthour, endhour, afspraakid, location)
     
     //getEvents()
     //handleClose()
@@ -361,8 +364,8 @@ export default function GoogleCalendarGrid(props) {
 
   }
 
-  const sendMailAfspraak = async (naam, bijlesVakken, datum, opmerking, prijs, starthour, endhour, afspraakid, location) => {
-    const respObject = {naam, bijlesVakken, datum, opmerking, prijs, starthour, endhour, afspraakid, location, emailTutor}
+  const sendMailAfspraak = async (naam, vakkenNamen, datum, opmerking, prijs, starthour, endhour, afspraakid, location) => {
+    const respObject = {naam, vakkenNamen, datum, opmerking, prijs, starthour, endhour, afspraakid, location, emailTutor}
 
     console.log(emailTutor)
     let response
@@ -701,6 +704,7 @@ export default function GoogleCalendarGrid(props) {
       }}
       //businessHours={vrijeTijd}  
       events={events}
+      
       dateClick={addAppointment}
       />
       :
