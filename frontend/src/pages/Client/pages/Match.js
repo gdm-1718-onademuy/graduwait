@@ -232,7 +232,7 @@ export default function Match() {
                                 </Grid>
               
                                     <br />
-                                <Button onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde, item.isTutor, item.isTutee, item.price, item.email)}>{t('Match13')}</Button>
+                                <Button onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde, item.isTutor, item.isTutee, item.price, item.email)}>{t('Match.13')}</Button>
                             </Grid>
                         </Grid>
 

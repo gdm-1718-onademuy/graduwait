@@ -5,7 +5,7 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from "@fullcalendar/interaction" // needed for dayClick
 import { styled, Box } from '@mui/system';
 import ModalUnstyled from '@mui/base/ModalUnstyled';
-import { TextField, Select, MenuItem, Checkbox, FormGroup, Grid, Modal, ButtonGroup, Button, Switch, FormControlLabel, Paper, Alert, Typography}  from '@mui/material';
+import { TextField, Select, Snackbar, MenuItem, Checkbox, FormGroup, Grid, Modal, ButtonGroup, Button, Switch, FormControlLabel, Paper, Alert, Typography}  from '@mui/material';
 import Title from './Title';
 import {useTranslation} from 'react-i18next';
 import {
@@ -129,6 +129,7 @@ export default function GoogleCalendarGrid(props) {
   const [scheduleAppointment, setScheduleAppointment] = useState(false)
   const [rate, setRate] = useState()
   const [emailTutor, setEmailTutor] = useState()
+  const [openSnackbar, setOpenSnackBar] = React.useState(false);
 
 
   // modal
@@ -380,6 +381,9 @@ export default function GoogleCalendarGrid(props) {
       await fetch("/sendAppointmentConfirmation", fetchData)
         .then((response) => {
           console.log(response)
+          handleClose()
+          setOpenSnackBar(true);
+
           //console.log("gelukt om te sturen")
         })
         /*.then(response => response.json())
@@ -391,9 +395,14 @@ export default function GoogleCalendarGrid(props) {
         })
 
         console.log(response)*/
-      
-
+    handleClose()
   }
+  const closeSnackbar = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackBar(false);
+  };
 
   const handleChange = (event) => {
     setCheckedVakken({
@@ -698,7 +707,11 @@ export default function GoogleCalendarGrid(props) {
       <p>Loading</p>
       }
    
-
+      <Snackbar open={openSnackbar} autoHideDuration={12000} onClose={closeSnackbar}>
+        <Alert onClose={closeSnackbar} severity="success" sx={{ width: '100%' }}>
+          You have requested this appointment. You will get an email once this has been confirmed.
+        </Alert>
+      </Snackbar>
       <Modal
         open={open}
         onClose={handleClose}
