@@ -128,6 +128,7 @@ export default function GoogleCalendarGrid(props) {
   const [possibleLocations, setPossibleLocations] = useState([{label:"Online", value:"online"}])
   const [scheduleAppointment, setScheduleAppointment] = useState(false)
   const [rate, setRate] = useState()
+  const [emailTutor, setEmailTutor] = useState()
 
 
   // modal
@@ -151,6 +152,7 @@ export default function GoogleCalendarGrid(props) {
       setOtherIsTutor(props.isTutor)
       setOtherIsTutee(props.isTutee)
       setRate(props.rate)
+      setEmailTutor(props.emailTutor)
       setIsOwnAgenda(false)
     } else {
       setIsOwnAgenda(true)
@@ -343,7 +345,7 @@ export default function GoogleCalendarGrid(props) {
     const tutorid = userid
     const studentid = user.uid
     const loggedinuser = await getUserData(user.uid)
-    const naam = loggedinuser.firstname + "" + loggedinuser.lastname
+    const naam = loggedinuser.firstname + " " + loggedinuser.lastname
     const datum = date
 
     const afspraakid = await makeAppointment(tutorid, studentid, date, starthour, endhour, vakkenIds, opmerking, location)
@@ -359,7 +361,10 @@ export default function GoogleCalendarGrid(props) {
   }
 
   const sendMailAfspraak = async (naam, bijlesVakken, datum, opmerking, prijs, starthour, endhour, afspraakid, location) => {
-    const respObject = {naam, bijlesVakken, datum, opmerking, prijs, starthour, endhour, afspraakid, location}
+    const respObject = {naam, bijlesVakken, datum, opmerking, prijs, starthour, endhour, afspraakid, location, emailTutor}
+
+    console.log(emailTutor)
+    let response
 
     const fetchData = {
       crossDomain: false,
@@ -368,17 +373,24 @@ export default function GoogleCalendarGrid(props) {
       headers: {
           "Content-Type": "application/json",
           "Accept": "application/json"  
-      },
-      credentials: 'include',
+      }
+      ,credentials: 'include',
       }
 
-     await fetch("/sendAppointmentConfirmation", fetchData)
-      .then(() => {
-          console.log("gelukt om te sturen")
-          //setOpenSnackBar(true);
+      await fetch("/sendAppointmentConfirmation", fetchData)
+        .then((response) => {
+          console.log(response)
+          //console.log("gelukt om te sturen")
+        })
+        /*.then(response => response.json())
+        .then((data) => {
+        response = data
+        })
+        .catch((error) => {
+        response = error
+        })
 
-      })
-
+        console.log(response)*/
       
 
   }

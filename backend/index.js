@@ -5,6 +5,9 @@ const bodyParser = require("body-parser")
 const path = require("path")
 const { auth } = require("./config/Initialize")
 const app = express()
+const XMLHttpRequest = require('xhr2');
+const cors = require("cors")
+
 
 //const env = require('dotenv')
 //env.config({path:'../.env'})
@@ -12,12 +15,13 @@ const app = express()
 // request voor api
 //var request = require("request")
 // mollie importen
-const { createMollieClient } = require("@mollie/api-client")
+//const { createMollieClient } = require("@mollie/api-client")
 //const XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest
-const cors = require("cors")
-const bodyParser = require("body-parser")
+//var xhr = new XMLHttpRequest();
+
 
 require('dotenv').config()
+
 
 app.use(express.json())
 app.use(bodyParser.urlencoded({extended: false}))
@@ -89,8 +93,7 @@ app.post('/update-password', async (req, res) => {
 // ORDER CONFIG MAIL  
 app.post('/sendAppointmentConfirmation', cors(), (req, res) => {
 
-  const { naam, bijlesVakken, datum, opmerking, prijs, starthour, endhour, afspraakid, location } = req.body
-  const email = "ona.demuytere@gmail.com"
+  const { naam, bijlesVakken, datum, opmerking, prijs, starthour, endhour, afspraakid, location, emailTutor } = req.body
   const url = "https://api.smtp2go.com/v3/email/send"
   const xhr = new XMLHttpRequest()
 
@@ -107,7 +110,7 @@ app.post('/sendAppointmentConfirmation', cors(), (req, res) => {
 
   const data = JSON.stringify({
     "api_key": "api-00580A8A6E3411EC94A5F23C91BBF4A0",
-    "to": [`${naam} <${email}>`],
+    "to": [`${naam} <${emailTutor}>`],
     "sender": "Ona Demuytere <ona.demuytere@student.arteveldehs.be>",
     "template_id": "2214556",
     "template_data": {
@@ -121,7 +124,7 @@ app.post('/sendAppointmentConfirmation', cors(), (req, res) => {
     //"confirm_url":`http://localhost:3000/agenda/myagenda/${afspraakid}`,
     "confirm_url":`http://localhost:3000/dashboard`,
     "price":prijs, 
-    "location": location
+    //"location": location
     },
     "custom_headers": [
       {
@@ -133,7 +136,7 @@ app.post('/sendAppointmentConfirmation', cors(), (req, res) => {
 
   xhr.send(data)
   .then(response => {
-    res.json({resp: false, response})
+    return res.json({resp: false, response})
   })
   .catch(error => {
     return res.json({resp: true, error,})

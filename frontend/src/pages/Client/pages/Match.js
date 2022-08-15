@@ -81,11 +81,11 @@ export default function Match() {
         // dit rerenderen?
     },[filter]);
 
-    const goToAgenda = (userid, name, subjectids, isTutor, isTutee, rate) => {
-        console.log(userid, name, subjectids, isTutor, isTutee, rate)
+    const goToAgenda = (userid, name, subjectids, isTutor, isTutee, rate, emailTutor) => {
+        console.log(userid, name, subjectids, isTutor, isTutee, rate, emailTutor)
         navigate(
             '/agenda/' + userid,
-            {state: { userid: userid, person: name, subjectids: subjectids, isTutor:isTutor, isTutee: isTutee, rate: rate }}
+            {state: { userid: userid, person: name, subjectids: subjectids, isTutor:isTutor, isTutee: isTutee, rate: rate, emailTutor: emailTutor }}
             //{state: { bijlesKrijger: bijlesKrijgen, bijlesGever: bijlesGeven, richting: richting, location: value, firstName: firstName, lastName: lastName, email: email}}
           )
     }
@@ -144,6 +144,7 @@ export default function Match() {
                         element.avatar = specificuser.avatar
                         element.vakkenZelfde = vakkenZelfde
                         element.price = specificuser.kost
+                        element.email = specificuser.email
                         element.distance = checkDistance(specificuser.latlng._lat,specificuser.latlng._long , lat_loggedin, lng_loggedin) // hier eig met latLoggedIn en letLoggedIn
                         console.log(element)
                         data.push(element)
@@ -231,7 +232,7 @@ export default function Match() {
                                 </Grid>
               
                                     <br />
-                                <Button onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde, item.isTutor, item.isTutee, item.price)}>Boek een afspraak</Button>
+                                <Button onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde, item.isTutor, item.isTutee, item.price, item.email)}>{t('Match13')}</Button>
                             </Grid>
                         </Grid>
 
