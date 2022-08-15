@@ -132,6 +132,7 @@ export default function GoogleCalendarGrid(props) {
   const [tuteeName, setTuteeName] = useState()
   const [tutorName, setTutorName] = useState()
   const [openSnackbar, setOpenSnackBar] = useState(false);
+  const [locationAppointment, setLocationAppointment] = useState();
 
 
   // modal
@@ -176,7 +177,15 @@ export default function GoogleCalendarGrid(props) {
         setTuteeName(tuteeData.firstname + " " + tuteeData.lastname)
         setTutorName(tutorData.firstname + " " + tutorData.lastname)
 
+        if (detailData.location === "tutor"){
+          setLocationAppointment(tutorData.woonplaats)
+        } else if (detailData.location === "tutee"){
+          setLocationAppointment(tuteeData.woonplaats)
+        } else {
+          setLocationAppointment("online")
+        }
       }
+
 
     }
   }, [appointmentId]);
@@ -184,6 +193,10 @@ export default function GoogleCalendarGrid(props) {
   useEffect( () => {
     console.log(open)
   }, [open]);
+
+  useEffect( () => {
+    console.log(locationAppointment)
+  }, [locationAppointment]);
 
   /*useEffect(async () => {
     //console.log(user)
@@ -656,9 +669,19 @@ export default function GoogleCalendarGrid(props) {
           {t('Afspraak.14')}
           </Grid>
           <Grid item xs={8}>
-          {appointmentDetails.location}
+          {locationAppointment}
           </Grid>
           
+          {appointmentDetails.opmerking &&
+          <>
+          <Grid item xs={4}>  
+          {t('Afspraak.15')}
+          </Grid>
+          <Grid item xs={8}>
+          {appointmentDetails.opmerking}
+          </Grid>
+          </>
+          }
         </Grid>
         </>
         {appointmentDetails.isconfirmed ?
