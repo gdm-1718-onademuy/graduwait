@@ -690,16 +690,77 @@ export default function GoogleCalendarGrid(props) {
           <Button variant="contained" fullWidth color="success" onClick={() => changeStatusAppointment("confirm")}>{t('Afspraak.9')}</Button>
         }
         </>
-      :
+      : // if appointmentsrole = tutee
+      <>
+      {appointmentDetails.isconfirmed ?
+        <Alert severity="success">{t('Afspraak.10')}{tutorName}</Alert>
+        :
+        <Alert severity="warning">{t('Afspraak.13')}{tutorName}</Alert>
+      }
+      <>
+      <Grid  container spacing={1} /*totaal is 12 bij xs*/> 
+       <Grid item xs={4}>  
+       {t('Profile.6')}
+        </Grid>
+        <Grid item xs={8}>  
+        {tuteeName}
+        </Grid>
+
+       <Grid item xs={4}>  
+       {t('Profile.5')}
+        </Grid>
+        <Grid item xs={8}>  
+        {tutorName}
+        </Grid>
+
+        <Grid item xs={4}>  
+        {t('Afspraak.3')}
+        </Grid>
+        <Grid item xs={8}>  
+        {appointmentDetails.date}
+        </Grid>
+
+        <Grid item xs={4}>  
+        {t('Afspraak.4')}
+        </Grid>
+        <Grid item xs={8}>  
+        {appointmentDetails.starthour}
+        </Grid>
+
+        <Grid item xs={4}>  
+        {t('Afspraak.5')}
+        </Grid>
+        <Grid item xs={8}>
+        {appointmentDetails.endhour}
+        </Grid>
+
+        <Grid item xs={4}>  
+        {t('Afspraak.14')}
+        </Grid>
+        <Grid item xs={8}>
+        {locationAppointment}
+        </Grid>
+        
+        {appointmentDetails.opmerking &&
         <>
-        {appointmentDetails.isconfirmed ?
+        <Grid item xs={4}>  
+        {t('Afspraak.15')}
+        </Grid>
+        <Grid item xs={8}>
+        {appointmentDetails.opmerking}
+        </Grid>
+        </>
+        }
+      </Grid>
+      </>
+      </>
+      }
+         
+        {/*appointmentDetails.isconfirmed ?
             <Alert severity="warning">{t('Afspraak.13')}{firstname}</Alert>
             :
           <Alert severity="success">{t('Afspraak.10')}{firstname}</Alert>
-        }
-        </>
-      }
-
+    */}
     </Grid>
 
           <Grid item xs={12}>
