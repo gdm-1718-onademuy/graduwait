@@ -3,7 +3,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import sortArray from 'sort-array'
 import { Avatar, Paper, TableRow, TableHead, TableCell, TableBody, Typography, CardContent, Button, CssBaseline, Box, Container, Grid} from '@mui/material';
-import { auth, db } from "../../../services/config/firebase";
+import { auth, db, getUserData } from "../../../services/config/firebase";
 import {useTranslation} from 'react-i18next';
 import EuroIcon from '@mui/icons-material/Euro';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -45,7 +45,14 @@ export default function Match() {
     
 
 
-  
+    useEffect(() => {
+        if (user){
+            findMatches(location.state.dataKrijgen)
+            //console.log(location.state.dataKrijgen)
+            //getUserById()
+        }
+        //findMatches(["3ot8CYJzwrehJEVGMUpl", "B2VBvQVb2VTgnlNCDux2", "LxcRRiHQhht0Aj5YRdvQ", "j4YpDs8BWvpubjl1P8Eb"])
+    }, [user, loading]);
 
 
     useEffect(() => {
@@ -108,7 +115,7 @@ export default function Match() {
     })
   }*/
 
-    useEffect(() => {
+    /*useEffect(() => {
         if (user){
             setArraySubjects(location.state.dataKrijgen)
             console.log(location.state.dataKrijgen)
@@ -117,9 +124,9 @@ export default function Match() {
         //findMatches(["3ot8CYJzwrehJEVGMUpl", "B2VBvQVb2VTgnlNCDux2", "LxcRRiHQhht0Aj5YRdvQ", "j4YpDs8BWvpubjl1P8Eb"])
     }, [user, loading]);
 
-    /*useEffect(() => {
+    useEffect(() => {
         console.log(userInformation) // eigenlijk niet nodig, dan krijg je server kant data
-    }, [userInformation]);*/
+    }, [userInformation]);
 
     useEffect(() => {
         if (arraySubjects.length > 0){
@@ -225,7 +232,7 @@ export default function Match() {
                 console.log(infoUMatch)
                 //data.push(element)
                 setArrayGiveTutoring(u.giveTutoring)
-                //setInfoUserMatch(infoUMatch)*/
+                //setInfoUserMatch(infoUMatch)
 
             }
         }
@@ -282,7 +289,7 @@ export default function Match() {
                             // console.log(doc.id, " => ", doc.data());
                             var element = {}
                             element.id = doc.id
-                    })})*/
+                    })})
 
 
 
@@ -338,31 +345,18 @@ export default function Match() {
             console.log('match')
         }
         
-    }
+    }*/
 
 
 
 
-    /*const findMatches = async (arraySubjects) => {
-        //console.log(user.uid)
+    const findMatches = async (arraySubjects) => {
+        //setArraySubjects(arraySubjects)
         // eerst lat en long halen van de ingelogde user
-        /*let lat_loggedin = 0
-        let lng_loggedin = 0
-        await db.collection("users").where("uid", "==", user.uid)
-            .get()
-            .then((querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                    // doc.data() is never undefined for query doc snapshots
-                    // console.log(doc.id, " => ", doc.data());
+        const geopoints = await getUserData(user.uid)
+        let lat_loggedin = geopoints.latlng._lat
+        let lng_loggedin = geopoints.latlng._long
 
-                    lat_loggedin = doc.data().latlng._lat
-                    lng_loggedin = doc.data().latlng._long
-                });
-            })
-            .catch((error) => {
-                // console.log("Error getting ddocumednts: ", error);
-            });
-        
         let aantalUsers = 0
         await db
         .collection("users")
@@ -447,7 +441,7 @@ export default function Match() {
     })    
    //set data in state heres
     //setFilter("MostMatches")
-    }*/
+    }
 
     useEffect(() => {
         console.log(matches)
@@ -542,7 +536,7 @@ export default function Match() {
                                 <Grid container spacing={2}>
                                     <Grid item xs={8}>
                                         <p><EuroIcon/>{item.price} {t('Match.3')}</p>
-                                        <p><LocationOnIcon/> {item.distance}  {t('Match.2')}</p>
+                                        <p><LocationOnIcon/> {(item.distance/1000).toFixed(1)}  {t('Match.2')}</p>
                                         <p><Rating name="read-only" value={3} readOnly /></p>
                                     </Grid>
 
