@@ -7,7 +7,7 @@ import { auth, db } from "../../../services/config/firebase";
 import LoggedIn from "../../auth/components/LoggedIn";
 import GoogleCalendarGrid from "../components/GoogleCalendarGrid";
 import {Box, Grid, Paper, Container, CssBaseline } from '@mui/material';
-import Scheduler from "../components/Scheduler";
+import Footer from "../../../footer/Footer";
 
 export default function MyAgenda() {
   const [user, loading, error] = useAuthState(auth);
@@ -44,14 +44,14 @@ export default function MyAgenda() {
             overflow: 'auto',
           }}
         >
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 2 }}>
       <Grid container spacing={3}>
             <Grid  item xs={12} >
             <Paper sx={{ 
                           p: 2, 
                           display: 'flex', 
                           flexDirection: 'column',
-                          height:'80vh',
+                          height:'75vh',
                           overflow: 'auto'
                         }}>
         {!location.state?
@@ -65,6 +65,7 @@ export default function MyAgenda() {
       </Container>
     </Box>
     </Box>
+    <Footer/>
     </>
   );
 }

@@ -28,6 +28,7 @@ import colors from '../colours.scss';
 import { passwordValidator, emailValidator} from "../../services/functions/validations";
 import { reload, updatePassword } from "firebase/auth";
 import ButtonNewHere from "./components/ButtonNewHere";
+import Footer from "../../footer/Footer";
 import {
   auth, getFieldsOfStudy, saveNewPassword, getUserData, getReviews, addDataUser, changeTutoring, addKostUser
 } from "../../services/config/firebase";
@@ -653,14 +654,14 @@ function UserProfile() {
             overflow: 'auto',
           }}
         >
-      <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+      <Container maxWidth="lg" sx={{ mt: 4, mb: 2 }}>
         <Grid container spacing={3}>
             <Grid item xs={12} md={5} lg={5}>
                 <Paper sx={{ 
                         p: 2,
                         display: 'flex',
                         flexDirection: 'column',
-                        height: '80vh',
+                        height: '75vh',
                         overflow: 'auto'
                         }}>
                   <Title>User profile</Title>
@@ -1005,6 +1006,8 @@ function UserProfile() {
     :
     <PopUp/>
     }
+    <Footer/>
+
     </>
 
   );

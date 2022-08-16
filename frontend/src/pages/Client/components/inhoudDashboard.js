@@ -255,7 +255,7 @@ import {
                       p: 2,
                       display: 'flex',
                       flexDirection: 'column',
-                      height: '70vh',
+                      height: '65vh',
                       overflow: 'auto'
                     }}
                   >

@@ -1,6 +1,7 @@
 import React from "react";
 import Typography from '@mui/material/Typography';
 import {useTranslation} from 'react-i18next';
+import Footer from "../../../footer/Footer";
 
 // styling
 import "./Info.scss";
@@ -30,6 +31,7 @@ export default function Info() {
       <Title>{t('Info.7')}</Title>
       <Typography mb={2} component="p" >{t('Info.8')}</Typography>
 
-    </LayoutFull>         
+    </LayoutFull>   
+    <Footer/>      
   </>);
 }

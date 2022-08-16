@@ -35,9 +35,9 @@ const LayoutFull = ({children}) => {
           overflow: 'auto',
       }}
       >
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth="lg" sx={{ mt: 4, mb: 2 }}>
           <Grid item xs={12}>
-            <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column'}}>
+            <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: '75vh'}}>
               {children}
             </Paper>
           </Grid>
