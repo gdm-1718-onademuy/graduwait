@@ -347,7 +347,7 @@ export default function GoogleCalendarGrid(props) {
 
 
 
-  const hoursAreNotTaken = (starthr, endhr) => {
+  const hoursTaken = (starthr, endhr) => {
     let data = []
     for (const event in events){
       //console.log(events[event])
@@ -400,34 +400,41 @@ export default function GoogleCalendarGrid(props) {
     const loggedinuser = await getUserData(user.uid)
     const naam = loggedinuser.firstname + " " + loggedinuser.lastname
     const datum = date
-    console.log(starthour)
-    console.log(endhour)
+
     const starthr = String(starthour.getHours()).padStart(2, '0') + ":" + String(starthour.getMinutes()).padStart(2,'0')
     const endhr = String(endhour.getHours()).padStart(2, '0') + ":" + String(endhour.getMinutes()).padStart(2,'0')
-
-   
-    console.log(hoursAreNotTaken(starthr, endhr))
-    console.log(hoursAreNotTaken(starthr, endhr).length)
+    console.log(starthr)
+    console.log(endhr)
     
-
     // restrictions
-    if (date >= minDate &&
+    if (new Date(date) >= minDate &&
       date !== "" &&
       starthr !== "" &&
       endhr !== "" &&
       vakkenIds.length > 0 &&
       location !== "" &&
-      starthr > "06:00" && endhr > "06:00" &&
-      starthr < "24:00" && endhr > "24:00" &&
-      starthr < endhr // &&
-      //hoursAreNotTaken() // als nog niet bezet is
+      starthr >= "06:00" && endhr >= "06:00" &&
+      starthr <= "24:00" && endhr <= "24:00" &&
+      starthr < endhr &&
+      !hoursTaken(starthr, endhr).length > 0
       ){
         console.log("it's oke, you can add")
+        const vakkenString = vakkenNamen.join(', ')
+        const afspraakid = await makeAppointment(tutorid, studentid, date, starthr, endhr, vakkenIds, opmerking, location, vakkenString)
+        //sendMailAfspraak(naam, vakkenNamen, datum, opmerking, rate, starthr, endhr, afspraakid, location)
+      } else {
+        if (!hoursTaken(starthr, endhr).length > 0){
+          setErrorForm("Your tutor isn't available that time, check the calendar.")
+        } else if (starthr >= "06:00" ||  endhr >= "06:00" || starthr <= "24:00" ||  endhr <= "24:00" ){
+          setErrorForm("Make sure the start and end time is between 06:00 and 24:00.")
+        } else if (new Date(date) >= minDate){
+          setErrorForm("You can request an appointment starting from tomorrow.")
+        } {
+          setErrorForm("Fill in all the fields correctly.")
+        }
       }
 
-  //const afspraakid = await makeAppointment(tutorid, studentid, date, starthr, endhr, vakkenIds, opmerking, location, vakkenNamen)
-  //console.log(afspraakid)
-    //sendMailAfspraak(naam, vakkenNamen, datum, opmerking, rate, starthr, endhr, afspraakid, location)
+ 
     
 
   }
@@ -860,11 +867,12 @@ export default function GoogleCalendarGrid(props) {
         <Box sx={style}>
           {modalAppointment?
              <>
-             {errorForm &&
-              <Grid item xs={12} >
-                <Alert severity="error">{errorForm}</Alert>
-              </Grid>
-             }
+                {errorForm ?
+                  <Grid item xs={12} >
+                    <Alert severity="error">{errorForm}</Alert>
+                  </Grid>:
+                <></>
+                }
             <Title>{t('Agenda.4')}</Title>
             <Grid container spacing={2} /*totaal is 12 bij xs*/> 
               <Grid item xs={4}>  

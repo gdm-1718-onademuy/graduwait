@@ -451,7 +451,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
 
       // als je de gegevens wilt van de eigen agenda
       if(who === "own"){
-        element.title = doc.data().subjectid
+        element.title = doc.data().title
         element.id = doc.id
         element.start = longstart
         element.end = longend
@@ -517,7 +517,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
 
       if(who === "own"){
         element.id = doc.id
-        element.title = doc.data().subjectid
+        element.title = doc.data().title
         element.start = longstart
         element.end = longend
         element.isconfirmed = isconfirmed
