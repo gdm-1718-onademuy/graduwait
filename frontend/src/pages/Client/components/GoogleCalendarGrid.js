@@ -337,6 +337,11 @@ export default function GoogleCalendarGrid(props) {
       aanvraagTutor()
     }
   }, [scheduleAppointment]);
+  useEffect( () => {
+    console.log(events)
+    console.log(isTutor)
+    console.log(isTutor)
+  }, [events]);
 
 
 
@@ -398,6 +403,8 @@ export default function GoogleCalendarGrid(props) {
     const endhr = String(endhour.getHours()).padStart(2, '0') + ":" + String(endhour.getMinutes()).padStart(2,'0')
     console.log(starthr)
     console.log(endhr)
+    const reedsGeboekt = hoursTaken(starthr, endhr)
+    console.log(reedsGeboekt)
     
     // restrictions
     if (new Date(date) >= minDate &&
@@ -413,16 +420,17 @@ export default function GoogleCalendarGrid(props) {
       ){
         console.log("it's oke, you can add")
         const vakkenString = vakkenNamen.join(', ')
-        const afspraakid = await makeAppointment(tutorid, studentid, date, starthr, endhr, vakkenIds, opmerking, location, vakkenString)
+        //const afspraakid = await makeAppointment(tutorid, studentid, date, starthr, endhr, vakkenIds, opmerking, location, vakkenString)
         //sendMailAfspraak(naam, vakkenNamen, datum, opmerking, rate, starthr, endhr, afspraakid, location)
       } else {
-        if (!hoursTaken(starthr, endhr).length > 0){
+        //console.log(hoursTaken(starthr, endhr).length === 0)
+        if (hoursTaken(starthr, endhr).length > 0){
           setErrorForm("Your tutor isn't available that time, check the calendar.")
-        } else if (starthr >= "06:00" ||  endhr >= "06:00" || starthr <= "24:00" ||  endhr <= "24:00" ){
+        } else if (starthr < "06:00" ||  endhr < "06:00" || starthr > "24:00" ||  endhr > "24:00" ){
           setErrorForm("Make sure the start and end time is between 06:00 and 24:00.")
-        } else if (new Date(date) >= minDate){
+        } else if (new Date(date) < minDate){
           setErrorForm("You can request an appointment starting from tomorrow.")
-        } {
+        } else {
           setErrorForm("Fill in all the fields correctly.")
         }
       }

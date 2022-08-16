@@ -144,8 +144,14 @@ export default function Match() {
                         element.avatar = specificuser.avatar
                         element.vakkenZelfde = vakkenZelfde
                         element.price = specificuser.kost
+                        
                         element.email = specificuser.email
                         element.distance = checkDistance(specificuser.latlng._lat,specificuser.latlng._long , lat_loggedin, lng_loggedin) // hier eig met latLoggedIn en letLoggedIn
+                        if (specificuser.getTutoring){
+                            element.isTutee = true
+                        } else {
+                            element.isTutee = false
+                        }
                         console.log(element)
                         data.push(element)
                         //setMatches(matches => matches.concat(data))
@@ -156,11 +162,6 @@ export default function Match() {
         }
     setMatches(data)
     console.log('match')
-
-
-     
-   //set data in state heres
-    //setFilter("MostMatches")
     }
 
     useEffect(() => {
@@ -232,7 +233,7 @@ export default function Match() {
                                 </Grid>
               
                                     <br />
-                                <Button onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde, item.isTutor, item.isTutee, item.price, item.email)}>{t('Match.13')}</Button>
+                                <Button onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde, true, item.isTutee, item.price, item.email)}>{t('Match.13')}</Button>
                             </Grid>
                         </Grid>
 
