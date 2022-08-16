@@ -285,7 +285,7 @@ export default function GoogleCalendarGrid(props) {
 
   const changeStatusAppointment = async (status) => {
   
-    //const response = await editAppointment(status, appointmentDetails.id)
+    const response = await editAppointment(status, appointmentDetails.id)
     //console.log(response)
     console.log(status)
     let name = ""
@@ -357,6 +357,7 @@ export default function GoogleCalendarGrid(props) {
       aanvraagTutor()
     }
   }, [scheduleAppointment]);
+
   useEffect( () => {
     console.log(events)
     console.log(isTutor)

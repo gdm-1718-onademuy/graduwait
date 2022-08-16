@@ -481,7 +481,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
         if(isconfirmed){
           element.color = colors.blue
         } else {
-          element.color = colors.lightblue
+          element.color = colors.light_blue
         }
         data.push(element)
         //data = doc.data()
@@ -491,7 +491,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
           element.title = "NA" // geen titel, want "not available" gaat geprint worden
           element.display = 'background'
           element.editable = false
-          element.color = "grey"
+          //element.color = "grey"
           element.start = longstart
           element.end = longend
           element.isconfirmed = isconfirmed
@@ -547,7 +547,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
         if(isconfirmed){
           element.color = colors.purple
         } else {
-          element.color = colors.lightpurple
+          element.color = colors.light_purple
         }
         data.push(element)
 
@@ -569,7 +569,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
           element.location = doc.data().location
           element.display = 'background'
           element.editable = false
-          element.color = "grey"
+          //element.color = "grey"
           data.push(element)
 
         }
