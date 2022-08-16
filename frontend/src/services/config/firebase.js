@@ -199,7 +199,6 @@ const editAppointment = async (todo, eventid) => {
   let resp
 
   if(todo === "cancel"){ // veranderen naar cancel!
-    updateObj.isconfirmed = true
     await db.collection("tutoring")
     .doc(eventid)
     .delete().then(() => {
@@ -211,6 +210,7 @@ const editAppointment = async (todo, eventid) => {
     });
 
   } else if (todo === "confirm"){
+    updateObj.isconfirmed = true
     await db.collection("tutoring")
     .doc(eventid)
     .update(updateObj)
