@@ -2,14 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
-import { Alert, TextField, Grid, Button, InputLabel} from '@mui/material';
+import { Alert, TextField, Grid, Button, InputLabel, FormControlLabel, Checkbox} from '@mui/material';
 
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import {useTranslation} from 'react-i18next';
 import Footer from "../../footer/Footer.js";
-
 
 // components
 import LayoutForms from "./components/LayoutForms.js";
@@ -188,9 +187,14 @@ function Extra() {
                   backgroundColor: colors.purple,
                   color: 'white'
                 }}
-              >Next</Button>
+              >REGISTER</Button>
               </Grid>
-
+              <Grid item xs={12}>
+                <div color="grey">
+                  By registering, you agree to our terms and conditions. You can find more information about how we collect, use and share your data in our privacy policy and about how we use cookies and similar technology in our cookie policy.
+                  </div>
+              </Grid>
+              
               <ButtonNewHere/>
 
         </LayoutForms>

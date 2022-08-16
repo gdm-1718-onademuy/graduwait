@@ -109,12 +109,7 @@ function Login() {
             autoComplete="current-password"
           />
 
-          <Grid item xs={20} sx={{ m: 1, p: -1}} >
-          <FormControlLabel
-            control={<Checkbox value="remember" color="secondary" />}
-            label="Remember me"
-          />
-          </Grid>
+     
           <Grid item xs={12} sx={{ mt: 3}}>
             <Button
               type="submit"
