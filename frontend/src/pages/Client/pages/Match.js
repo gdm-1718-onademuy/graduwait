@@ -217,6 +217,7 @@ export default function Match() {
 
                                 <Grid container spacing={2}>
                                     <Grid item xs={8}>
+                                        <p><EuroIcon/>{item.email}</p>
                                         <p><EuroIcon/>{item.price} {t('Match.3')}</p>
                                         <p><LocationOnIcon/> {(item.distance/1000).toFixed(1)}  {t('Match.2')}</p>
                                         <p><Rating name="read-only" value={3} readOnly /></p>

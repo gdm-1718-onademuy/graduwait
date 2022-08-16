@@ -290,15 +290,17 @@ export default function GoogleCalendarGrid(props) {
     console.log(status)
     let name = ""
     let template_id = ""
+    let email_to = ""
 
     if (status === "confirm"){
       setAlertSnackbar(t('Dashboard.16'))
       handleClose()
       setOpenSnackBar(true)
-      // TO DO : SEND EMAIL CONFIRMATION
-      console.log(appointmentDetails)
+      // TO DO : SEND EMAIL CONFIRMATION TO TUTEE
       name = tutorName
       template_id = "8443885"
+      const tutee = await getUserData(appointmentDetails.tuteeid)
+      email_to = tutee.email
 
 
     } else if (status === "cancel"){
@@ -307,13 +309,19 @@ export default function GoogleCalendarGrid(props) {
       setOpenSnackBar(true)
       // TO DO : SEND EMAIL CONFIRMATION
       template_id = "7769227"
-      if (appointmentDetails.tutorid === user.uid){
+      if (appointmentDetails.tutorid === user.uid){ // als ingelogde user de tutor is
         name = tuteeName
+        const tutor = await getUserData(appointmentDetails.tutorid)
+        email_to = tutor.email
       } else {
         name = tutorName
+        const tutee = await getUserData(appointmentDetails.tuteeid)
+        email_to = tutee.email
       }
     }
-    sendMailAfspraakStatus(status, name, appointmentDetails.subjects, appointmentDetails.date, appointmentDetails.starthour, appointmentDetails.endhour, appointmentDetails.id, appointmentDetails.location, template_id)
+    if (template_id !== ""){
+      sendMailAfspraakStatus(status, name, appointmentDetails.subjects, appointmentDetails.date, appointmentDetails.starthour, appointmentDetails.endhour, appointmentDetails.id, appointmentDetails.opmerking, appointmentDetails.location, template_id, email_to)
+    }
 
   }
 
@@ -479,12 +487,12 @@ export default function GoogleCalendarGrid(props) {
     setOpenSnackBar(true);
   }
 
-  const sendMailAfspraakStatus = async (status, name, subjects, date, starthour, endhour, opmerking, id, location, template_id) => {
+  const sendMailAfspraakStatus = async (status, name, subjects, date, starthour, endhour, opmerking, id, location, template_id, email_to) => {
     //const appointmentData = getAppointmentById()
- 
-    const respObject = {status, name, subjects, date, starthour, endhour, opmerking, id, location, template_id, emailTutor}
 
-    console.log(emailTutor)
+
+    const respObject = {status, name, subjects, date, starthour, endhour, opmerking, id, location, template_id, email_to}
+
     let response
 
     const fetchData = {

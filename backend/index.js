@@ -92,8 +92,7 @@ app.post('/update-password', async (req, res) => {
 
 // ORDER CONFIG MAIL  
 app.post('/sendAppointmentConfirmation', cors(), (req, res) => {
-
-  const { naam, vakkenNamen, datum, opmerking, prijs, starthour, endhour, afspraakid, location, emailTutor } = req.body
+  //const { naam, vakkenNamen, datum, opmerking, prijs, starthour, endhour, afspraakid, location, emailTutor } = req.body
   const url = "https://api.smtp2go.com/v3/email/send"
   const xhr = new XMLHttpRequest()
 
@@ -146,7 +145,7 @@ app.post('/sendAppointmentConfirmation', cors(), (req, res) => {
 // CANCEL OR CONFIRM MAIL
 app.post('/sendCancelorConfirm', cors(), (req, res) => {
 
-  const {status, name, subjects, date, starthour, endhour, opmerking, id, location, template_id, emailTutor} = req.body
+  const {status, name, subjects, date, starthour, endhour, opmerking, id, location, template_id, email_to} = req.body
   
   const url = "https://api.smtp2go.com/v3/email/send"
   const xhr = new XMLHttpRequest()
@@ -164,7 +163,7 @@ app.post('/sendCancelorConfirm', cors(), (req, res) => {
   const data = JSON.stringify({
     //"api_key": "api-00580A8A6E3411EC94A5F23C91BBF4A0",
     "api_key": process.env.SMPT_API_KEY,
-    "to": [`${name} <${emailTutor}>`], // deze nog aanpassen aan daarom niet per see email tutor
+    "to": [`${name} <${email_to}>`], // deze nog aanpassen aan daarom niet per see email tutor
     "sender": "Graduwait <info.graduwait@gmail.com>",
     "template_id": template_id,
     "template_data": {
