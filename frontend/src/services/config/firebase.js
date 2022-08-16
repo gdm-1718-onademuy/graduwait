@@ -4,6 +4,7 @@ import "firebase/compat/firestore"
 import "firebase/compat/storage"
 import { getAuth } from "firebase/auth";
 import {doc, updateDoc, deleteField} from "firebase/firestore"
+import colors from '../../pages/colours.scss';
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -433,7 +434,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
     userid = who
   }
   
-  if (isTutor){
+  if (isTutor){ //blauwe waardes
   // hier alle appointments halen als user tutored
   await db.collection("tutoring")
   .where("tutorid", "==", userid)
@@ -465,9 +466,9 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
         element.endhour = doc.data().endhour
         element.location = doc.data().location
         if(isconfirmed){
-          element.color = '#00008b'
+          element.color = colors.blue
         } else {
-          element.color = '#add8e6'
+          element.color = colors.lightblue
         }
         data.push(element)
         //data = doc.data()
@@ -500,7 +501,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
   })
   }
 
-  if (isTutee){
+  if (isTutee){ //paarse waardes
   // hier als mens wordt getutored
   await db.collection("tutoring")
   .where("studentid", "==", userid)
@@ -531,9 +532,9 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
         element.location = doc.data().location
         // color purple for TUTORING
         if(isconfirmed){
-          element.color = '#301934'
+          element.color = colors.purple
         } else {
-          element.color = '#CBC3E3'
+          element.color = colors.lightpurple
         }
         data.push(element)
 
