@@ -20,9 +20,10 @@
         "11": "Delete from my mastered subjects",
         "12": "Delete from my unmastered subjects",
         "13": "I need tutoring for this subject",
-        "14": "This subject has been successfully deleted from your dashboard"
-
-
+        "14": "This subject has been successfully deleted from your dashboard",
+        "15": "You have requested this appointment. You will get an email once this has been confirmed.",
+        "16": "You have confirmed this appointment. The tutee will get a confirmation email.",
+        "17": "You have cancelled this appointment. The tutee will get an email."
     },
     "Info": {
         "1": "Who are we",

@@ -20,7 +20,10 @@
         "11": "Verwijder van mijn beheersde onderwerpen",
         "12": "Verwijder van mijn te kennen onderwerpen",
         "13": "Ik heb bijles nodig over dit onderwerp",
-        "14": "Dit onderwerp is verwijderd van het overzicht"
+        "14": "Dit onderwerp is verwijderd van het overzicht",
+        "15": "Je hebt deze afspraak aangevraagd. Je krijgt een mail eens deze bevestigd is.",
+        "16": "Je hebt deze afspraak bevestigd. De bijlesnemer krijgt een bevestigingsmail.",
+        "17": "Je hebt deze afspraak geannuleerd. De bijlesnemer krijgt een mail."
 
     },
     "Info": {
@@ -69,15 +72,15 @@
         "7": "Annuleer deze afspraak",
         "8": "Afspraak om bijles te geven",
         "9": "Bevestig deze afspraak",
-        "10": "Deze afspraak is bevestigd door",
+        "10": "Deze afspraak is bevestigd door ",
         "11": "jou",
-        "12": "Deze afspraak moet bevestigd of geannuleerd woroden door jou",
+        "12": "Deze afspraak moet bevestigd of geannuleerd worden door jou",
         "13": "Deze afspraak moet bevestigd worden door ",
         "14": "Locatie",
         "15": "Opmerking",
         "16": "Locatie bijlesgever",
         "17": "Bij mij",
-        "18": "Deze afspraak maken",
+        "18": "Deze afspraak maken"
 
 
     },

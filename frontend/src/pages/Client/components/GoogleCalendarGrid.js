@@ -133,7 +133,9 @@ export default function GoogleCalendarGrid(props) {
   const [tutorName, setTutorName] = useState()
   const [openSnackbar, setOpenSnackBar] = useState(false);
   const [locationAppointment, setLocationAppointment] = useState();
-
+  const [alertSnackbar, setAlertSnackbar] = useState();
+  const [minHour, setMinHour] = useState()
+  const [maxHour, setMaxHour] = useState()
 
   // modal
   const [open, setOpen] = useState(false);
@@ -198,23 +200,6 @@ export default function GoogleCalendarGrid(props) {
     console.log(locationAppointment)
   }, [locationAppointment]);
 
-  /*useEffect(async () => {
-    //console.log(user)
-    if (user){
-      //console.log("events")
-      const userData = await getUserData(user.uid)
-      if (userData.getTutoring){
-        setIsTutee(true)
-      }
-      if (userData.giveTutoring){
-        setIsTutor(true)
-      }
-      const eventsOfUser = await getAppointmentsUser(user.uid, isTutee, isTutor)
-      setEvents(eventsOfUser)
-      //console.log(eventsOfUser)
-    }
-  }, [user]);*/
-
   
   useEffect(async () => {
     //console.log(user)
@@ -267,6 +252,8 @@ export default function GoogleCalendarGrid(props) {
   }
   }, [isTutee, isTutor, isOwnAgenda, user]);
 
+
+
   useEffect( async () => {
     if (userid){
       const userData = await getUserData(userid)
@@ -303,10 +290,25 @@ export default function GoogleCalendarGrid(props) {
 
 
   const changeStatusAppointment = async (status) => {
-    //console.log(status)
-    //console.log(appointmentDetails.id)
+  
     const response = await editAppointment(status, appointmentDetails.id)
     console.log(response)
+    console.log(status)
+    if (status === "confirm"){
+      setAlertSnackbar(t('Dashboard.16'))
+      handleClose()
+      setOpenSnackBar(true)
+      // TO DO : SEND EMAIL CONFIRMATION
+
+    } else if (status === "cancel"){
+      setAlertSnackbar(t('Dashboard.17'))
+      handleClose()
+      setOpenSnackBar(true)
+      // TO DO : SEND EMAIL CONFIRMATION
+
+    }
+
+
   }
 
   const getTomorrowsDate =  () => {
@@ -314,6 +316,8 @@ export default function GoogleCalendarGrid(props) {
     const tomorrow = new Date(today)
     tomorrow.setDate(tomorrow.getDate() + 1)
     setMinDate(tomorrow)
+    setMinHour(new Date(0, 0, 0, 6) )
+    setMaxHour(new Date(0, 0, 0, 24) )
   }
 
   const addAppointment = (arg) => {
@@ -327,8 +331,8 @@ export default function GoogleCalendarGrid(props) {
       const startHour = String(arg.date.getHours()).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0')
       const endHour = String(arg.date.getHours()+1).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0')
       setDate(arg.date.getFullYear() + "-" + month + "-" + day)
-      setStarthour(String(arg.date.getHours()).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
-      setEndhour(String(arg.date.getHours()+1).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
+      //setStarthour(String(arg.date.getHours()).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
+      //setEndhour(String(arg.date.getHours()+1).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
   
   
     }
@@ -341,6 +345,29 @@ export default function GoogleCalendarGrid(props) {
     }
   }, [scheduleAppointment]);
 
+
+
+  const hoursAreNotTaken = (starthr, endhr) => {
+    let data = []
+    for (const event in events){
+      //console.log(events[event])
+      if (events[event].date === date ){
+        if ((starthr < events[event].starthour && 
+          endhr <= events[event].starthour ) 
+          || // or
+          ( starthr >= events[event].endhour &&
+          endhr > events[event].endhour )) 
+          {
+            data = data
+        } else {
+          data.push("mis")
+        }
+      }
+    }
+    return data
+  }
+
+     
   const aanvraagTutor = async () => {
 
     //console.log("do request")
@@ -366,28 +393,47 @@ export default function GoogleCalendarGrid(props) {
     }
     console.log("done")
 
-    console.log(vakkenIds)
+    console.log(vakkenNamen)
 
     const tutorid = userid
     const studentid = user.uid
     const loggedinuser = await getUserData(user.uid)
     const naam = loggedinuser.firstname + " " + loggedinuser.lastname
     const datum = date
+    console.log(starthour)
+    console.log(endhour)
+    const starthr = String(starthour.getHours()).padStart(2, '0') + ":" + String(starthour.getMinutes()).padStart(2,'0')
+    const endhr = String(endhour.getHours()).padStart(2, '0') + ":" + String(endhour.getMinutes()).padStart(2,'0')
 
-    const afspraakid = await makeAppointment(tutorid, studentid, date, starthour, endhour, vakkenIds, opmerking, location)
-    console.log(afspraakid)
-    sendMailAfspraak(naam, vakkenNamen, datum, opmerking, rate, starthour, endhour, afspraakid, location)
+   
+    console.log(hoursAreNotTaken(starthr, endhr))
+    console.log(hoursAreNotTaken(starthr, endhr).length)
     
-    //getEvents()
-    //handleClose()
-    //setScheduleAppointment(false)*/
 
-   // makeAppointment()
+    // restrictions
+    if (date >= minDate &&
+      date !== "" &&
+      starthr !== "" &&
+      endhr !== "" &&
+      vakkenIds.length > 0 &&
+      location !== "" &&
+      starthr > "06:00" && endhr > "06:00" &&
+      starthr < "24:00" && endhr > "24:00" &&
+      starthr < endhr // &&
+      //hoursAreNotTaken() // als nog niet bezet is
+      ){
+        console.log("it's oke, you can add")
+      }
+
+  //const afspraakid = await makeAppointment(tutorid, studentid, date, starthr, endhr, vakkenIds, opmerking, location, vakkenNamen)
+  //console.log(afspraakid)
+    //sendMailAfspraak(naam, vakkenNamen, datum, opmerking, rate, starthr, endhr, afspraakid, location)
+    
 
   }
 
-  const sendMailAfspraak = async (naam, vakkenNamen, datum, opmerking, prijs, starthour, endhour, afspraakid, location) => {
-    const respObject = {naam, vakkenNamen, datum, opmerking, prijs, starthour, endhour, afspraakid, location, emailTutor}
+  const sendMailAfspraak = async (naam, vakkenNamen, datum, opmerking, prijs, starthr, endhr, afspraakid, location) => {
+    const respObject = {naam, vakkenNamen, datum, opmerking, prijs, starthr, endhr, afspraakid, location, emailTutor}
 
     console.log(emailTutor)
     let response
@@ -407,6 +453,8 @@ export default function GoogleCalendarGrid(props) {
         .then((response) => {
           console.log(response)
           handleClose()
+          setAlertSnackbar(t('Dashboard.15'))
+
           setOpenSnackBar(true);
 
           //console.log("gelukt om te sturen")
@@ -488,8 +536,8 @@ export default function GoogleCalendarGrid(props) {
           renderInput={(params) => <TextField {...params} />}
           label={t('Afspraak.4')}
           value={starthour}
-          minTime={new Date(0, 0, 0, 8)}
-          maxTime={new Date(0, 0, 0, 18, 45)}
+          minTime={minHour}
+          maxTime={maxHour}
           onChange={(e) => {
             setStarthour(e);
           }}
@@ -514,8 +562,8 @@ export default function GoogleCalendarGrid(props) {
           renderInput={(params) => <TextField {...params} />}
           label={t('Afspraak.5')}
           value={endhour}
-          minTime={new Date(0, 0, 0, 8)}
-          maxTime={new Date(0, 0, 0, 18, 45)}
+          minTime={minHour}
+          maxTime={maxHour}
           onChange={(e) => {
             setEndhour(e);
           }}
@@ -617,6 +665,7 @@ export default function GoogleCalendarGrid(props) {
     <Grid container spacing={2} /*totaal is 12 bij xs*/> 
     <Grid key={appointmentDetails.id} item justify="flex-end" xs={12}>  
     </Grid>
+    {/* TO DO: ERROR FORM */}
     <Grid item xs={12}>  
     <Grid item xs={12}>  
         <Title>{appointmentDetails.title}</Title>
@@ -755,14 +804,7 @@ export default function GoogleCalendarGrid(props) {
       </>
       </>
       }
-         
-        {/*appointmentDetails.isconfirmed ?
-            <Alert severity="warning">{t('Afspraak.13')}{firstname}</Alert>
-            :
-          <Alert severity="success">{t('Afspraak.10')}{firstname}</Alert>
-    */}
     </Grid>
-
           <Grid item xs={12}>
            <Button variant="outlined" fullWidth color="error" startIcon={<DeleteIcon />} onClick={() => changeStatusAppointment("cancel")}>{t('Afspraak.7')}</Button>
            </Grid>
@@ -785,7 +827,7 @@ export default function GoogleCalendarGrid(props) {
       {showAgenda ?
       <FullCalendar 
       plugins={[ dayGridPlugin, interactionPlugin, timeGridPlugin ]}
-      initialView="dayGridMonth"
+      initialView="timeGridWeek"
       weekends={true}
       //dateClick={}
       //dateClick={handleDateClick}
@@ -806,7 +848,7 @@ export default function GoogleCalendarGrid(props) {
    
       <Snackbar open={openSnackbar} autoHideDuration={12000} onClose={closeSnackbar}>
         <Alert onClose={closeSnackbar} severity="success" sx={{ width: '100%' }}>
-          You have requested this appointment. You will get an email once this has been confirmed.
+          {alertSnackbar}
         </Alert>
       </Snackbar>
       <Modal

@@ -157,12 +157,13 @@ const addKostUser = async (uid, kost) => {
 
 // AGENDA FUNCTIONALITIES
 // add an appointment
-const makeAppointment = async (tutorid, studentid, date, starthour, endhour, vakkenIds, opmerking, location) => {
+const makeAppointment = async (tutorid, studentid, date, starthour, endhour, vakkenIds, opmerking, location, vakkenNamen) => {
     const today = new Date(); 
 
     let afspraak_id 
 
     const object = {
+      title: vakkenNamen,
       daterequest: today,
       isconfirmed: false,
       tutorid: tutorid,
@@ -195,22 +196,31 @@ const makeAppointment = async (tutorid, studentid, date, starthour, endhour, vak
 // edit appointments (delete or confirm)
 const editAppointment = async (todo, eventid) => {
   const updateObj = {}
-  if(todo === "cancel"){ // veranderen naar cancel!
-    updateObj.iscanceled = true
-  } else if (todo === "confirm"){
-    updateObj.isconfirmed = true
-  }
-
   let resp
-  await db.collection("tutoring")
-  .doc(eventid)
-  .update(updateObj)
-  .then(() => {
-    resp = todo
-  }).catch((error) => {
-    resp = error
-    //console.error("Error removing document: ", error);
-  });
+
+  if(todo === "cancel"){ // veranderen naar cancel!
+    updateObj.isconfirmed = true
+    await db.collection("tutoring")
+    .doc(eventid)
+    .delete().then(() => {
+      resp = todo
+
+    }).catch((error) => {
+      resp = error
+
+    });
+
+  } else if (todo === "confirm"){
+    await db.collection("tutoring")
+    .doc(eventid)
+    .update(updateObj)
+    .then(() => {
+      resp = todo
+    }).catch((error) => {
+      resp = error
+    });
+
+  }
 
   return resp
 }
@@ -441,7 +451,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
 
       // als je de gegevens wilt van de eigen agenda
       if(who === "own"){
-        element.title = "bijles geven" //doc.data().title
+        element.title = doc.data().subjectid
         element.id = doc.id
         element.start = longstart
         element.end = longend
@@ -507,7 +517,7 @@ const getAppointmentsUser = async (uid, isTutor, isTutee, who) => {
 
       if(who === "own"){
         element.id = doc.id
-        element.title = "bijles krijgen" //doc.data().title
+        element.title = doc.data().subjectid
         element.start = longstart
         element.end = longend
         element.isconfirmed = isconfirmed
