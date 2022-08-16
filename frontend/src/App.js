@@ -12,7 +12,6 @@ import Forgot from './pages/auth/Forgot.js';
 
 import Dashboard from './pages/Client/pages/Dashboard.js';
 import MyAgenda from './pages/Client/pages/MyAgenda.js';
-import History from './pages/Client/pages/History.js';
 import Info from './pages/Client/pages/Info.js';
 import Payment from './pages/Client/pages/Payment.js';
 import PaymentSuccessful from './pages/Client/pages/PaymentSuccessful.js';
@@ -35,9 +34,7 @@ function App() {
 
         <Route path="/dashboard" element={<Dashboard />} />
         <Route exact path="/agenda/:id" element={<MyAgenda/>} />
-        {/*Route exact path="/myagenda/:afspraakid" element={<MyAgenda />}*/}
         <Route exact path="/myagenda" element={<MyAgenda />} />
-        <Route path="/history" element={<History />} />
         <Route path="/info" element={<Info />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/PaymentSuccessful" element={<PaymentSuccessful />} />

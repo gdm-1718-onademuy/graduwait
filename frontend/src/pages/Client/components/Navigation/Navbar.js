@@ -26,7 +26,6 @@ const Navbar = ({toggle}) => {
             <NavLink to="/dashboard" >{t('Menu.1')}</NavLink>
                 <NavLink to="/myagenda" >{t('Menu.2')}</NavLink>
                 <NavLink to="/profile" >{t('Menu.3')}</NavLink>
-                <NavLink to="/history" >{t('Menu.4')}</NavLink>
                 <NavLink to="/info" >{t('Menu.5')}</NavLink>
                 <ButtonGroup variant="text" aria-label="outlined primary button group">
                     <Button style={{

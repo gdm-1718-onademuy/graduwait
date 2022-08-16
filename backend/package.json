@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "cd ../frontend --prefix && npm install && BUILD_PATH='../backend/build' GENERATE_SOURCEMAP=false npm run build"
   },
   "keywords": [],
   "author": "",

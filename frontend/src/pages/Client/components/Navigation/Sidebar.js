@@ -17,7 +17,6 @@ const Sidebar = ({isOpen, toggle}) => {
                     <SidebarLink to="/dashboard" onClick={toggle}>Dashboard</SidebarLink>
                     <SidebarLink to="/myagenda" onClick={toggle}>My agenda</SidebarLink>
                     <SidebarLink to="/profile" onClick={toggle}>Profile</SidebarLink>
-                    <SidebarLink to="/history" onClick={toggle}>History</SidebarLink>
                     <SidebarLink to="/info" onClick={toggle}>Info</SidebarLink>
                     <NavBtnLink to="/" color="primary" variant="contained" onClick={logout}>
                     Logout
