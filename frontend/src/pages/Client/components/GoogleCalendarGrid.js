@@ -420,8 +420,8 @@ export default function GoogleCalendarGrid(props) {
       ){
         console.log("it's oke, you can add")
         const vakkenString = vakkenNamen.join(', ')
-        //const afspraakid = await makeAppointment(tutorid, studentid, date, starthr, endhr, vakkenIds, opmerking, location, vakkenString)
-        //sendMailAfspraak(naam, vakkenNamen, datum, opmerking, rate, starthr, endhr, afspraakid, location)
+        const afspraakid = await makeAppointment(tutorid, studentid, date, starthr, endhr, vakkenIds, opmerking, location, vakkenString)
+        sendMailAfspraak(naam, vakkenNamen, datum, opmerking, rate, starthr, endhr, afspraakid, location)
       } else {
         //console.log(hoursTaken(starthr, endhr).length === 0)
         if (hoursTaken(starthr, endhr).length > 0){
