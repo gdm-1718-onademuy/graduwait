@@ -122,7 +122,7 @@ function Extra() {
                   <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DesktopDatePicker
                     required
-                    label="Birthday"
+                    label="Date of birth"
                     inputFormat="dd/MM/yyyy"
                     maxDate={birthdaysHighschool}
                     value={birthday}

@@ -8,7 +8,7 @@ import {useTranslation} from 'react-i18next';
 import EuroIcon from '@mui/icons-material/Euro';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import Rating from '@mui/material/Rating';
-
+import colors from '../../colours.scss'
 // styling
 import "./Match.scss";
 
@@ -71,11 +71,7 @@ export default function Match() {
             sorted = sortArray(matches, {by: 'distance', order: 'asc'})
         } else if (filter === "ReviewBestWorse") {
             sorted = sortArray(matches, {by: 'review', order: 'desc'})
-        } else if (filter === "ReviewWorseBest") {
-            sorted = sortArray(matches, {by: 'review', order: 'asc'})
-        } else if (filter === "MostMatches"){
-            sorted = sortArray(matches, {by: 'aantal', order: 'desc'})
-        }
+        } 
 
         setMatches(sorted)
         // dit rerenderen?
@@ -144,6 +140,7 @@ export default function Match() {
                         element.avatar = specificuser.avatar
                         element.vakkenZelfde = vakkenZelfde
                         element.price = specificuser.kost
+                        element.school = specificuser.richting
                         
                         element.email = specificuser.email
                         element.distance = checkDistance(specificuser.latlng._lat,specificuser.latlng._long , lat_loggedin, lng_loggedin) // hier eig met latLoggedIn en letLoggedIn
@@ -173,21 +170,22 @@ export default function Match() {
             <LoggedIn/>
             <LayoutFull>
             <Title> {amountUsers} {t('Match.5')}</Title>
-            <Paper sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'row',
-                    //height: '10vh',
-                    overflow: 'auto',
-                    margin: "0 0 30px 0",
-                    }}>
+            <Paper
+              sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'row',
+              //height: '10vh',
+              overflow: 'auto',
+              margin: "0 0 30px 0",
+              }}
+          >
             <Button fullWidth variant="outlined" onClick={() => setFilter("MostMatches")}>{t('Match.6')}</Button>
             <Button fullWidth variant="outlined" onClick={() => setFilter("PriceLowHigh")}>{t('Match.7')}</Button>
             <Button fullWidth variant="outlined" onClick={() => setFilter("PriceHighLow")}>{t('Match.8')}</Button>
             <Button fullWidth variant="outlined" onClick={() => setFilter("DistanceCloseFar")}>{t('Match.9')}</Button>
             <Button fullWidth variant="outlined" onClick={() => setFilter("DistanceFarClose")}>{t('Match.10')}</Button>
-            <Button fullWidth variant="outlined" onClick={() => setFilter("ReviewBestWorse")}>{t('Match.11')}</Button>
-            <Button fullWidth variant="outlined" onClick={() => setFilter("ReviewWorseBest")}>{t('Match.12')}</Button>
+
             </Paper>
                 {matches && matches.map((item, index) => 
                 (
@@ -210,6 +208,7 @@ export default function Match() {
                                 <Typography variant="h5" component="div">
                                     {item.person} 
                                 </Typography>
+                         
                                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
                                     {item.aantal} match(es)
                                 </Typography>
@@ -217,10 +216,10 @@ export default function Match() {
 
                                 <Grid container spacing={2}>
                                     <Grid item xs={8}>
-                                        <p><EuroIcon/>{item.email}</p>
-                                        <p><EuroIcon/>{item.price} {t('Match.3')}</p>
-                                        <p><LocationOnIcon/> {(item.distance/1000).toFixed(1)}  {t('Match.2')}</p>
-                                        <p><Rating name="read-only" value={3} readOnly /></p>
+                                        <p>{item.email}</p>
+                                        <p>{item.school}</p>
+                                        <p>{item.price} {t('Match.3')}</p>
+                                        <p>{(item.distance/1000).toFixed(1)}  {t('Match.2')}</p>
                                     </Grid>
 
                                     <Grid item xs={4}>
@@ -234,7 +233,8 @@ export default function Match() {
                                 </Grid>
               
                                     <br />
-                                <Button onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde, true, item.isTutee, item.price, item.email)}>{t('Match.13')}</Button>
+                                <Button variant = "contained" style={{ backgroundColor: colors.blue,
+                color: 'white'}} onClick={() => goToAgenda(item.uid, item.person, item.vakkenZelfde, true, item.isTutee, item.price, item.email)}>{t('Match.13')}</Button>
                             </Grid>
                         </Grid>
 
