@@ -16,6 +16,8 @@ import {useTranslation} from 'react-i18next';
 import Title from '../components/Title';
 import { formControlClasses } from "@mui/material";
 import Scheduler from "../components/SchedulerOtherProfile";
+import Footer from "../../../footer/footer";
+
 
 
 export default function Agenda() {

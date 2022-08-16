@@ -5,11 +5,13 @@ import Box from '@mui/material/Box';
 import LoggedIn from "../../auth/components/LoggedIn";
 import InhoudDashboard from '../components/inhoudDashboard';
 import Container from '@mui/material/Container';
+import Footer from '../../../footer/Footer';
 
 const mdTheme = createTheme();
 
 function Dashboard() {
   return (
+    <>
     <ThemeProvider theme={mdTheme}>
       <LoggedIn/>
       <Box sx={{ display: 'flex' }}>
@@ -34,6 +36,9 @@ function Dashboard() {
         </Box>
       </Box>
     </ThemeProvider>
+    <Footer/>
+    </>
+
   );
 }
 

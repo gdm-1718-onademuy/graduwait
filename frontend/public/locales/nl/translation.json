@@ -4,7 +4,8 @@
         "2": "Mijn agenda",
         "3": "Profiel",
         "4": "Geschiedenis",
-        "5": "Info"
+        "5": "Info",
+        "6": "© Arteveldehogeschool, opleiding Grafische en digitale media"
     },
     "Dashboard": {
         "1": "Volgende bijles sessie(s)",
@@ -61,6 +62,7 @@
         "3": "Bijles krijgen - afspraak bevestigd",
         "4": "Bijles krijgen - afspraak NIET bevestigd",
         "5": "Legende"
+
     },
     "Afspraak": {
         "1": "Afspraak om bijles te krijgen",

@@ -4,7 +4,8 @@
         "2": "My agenda",
         "3": "Profile",
         "4": "History",
-        "5": "Info"
+        "5": "Info",
+        "6": "© Arteveldehogeschool, Graphic and Digital Media"
     },
     "Dashboard": {
         "1": "Next tutor session(s)",
@@ -42,7 +43,6 @@
         "4": "Schedule an appointment",
         "5": "Set your available hours",
         "6": "Do you want to setup a scheme, so that people can only make an appointment on the available hours?"
-
     },
     "Weekdagen": {
         "1": "Monday",
