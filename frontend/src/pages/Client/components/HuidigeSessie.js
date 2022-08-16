@@ -10,7 +10,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 function preventDefault(event) {
   event.preventDefault();
 } 
- 
+ // hier userprofile
 export default function HuidigeSessie() {
   const { t } = useTranslation()
   const [user, loading, error] = useAuthState(auth);

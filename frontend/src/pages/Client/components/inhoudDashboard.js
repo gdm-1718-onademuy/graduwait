@@ -245,23 +245,27 @@ import {
 
 
     const Overview = () => (
-      <Grid container spacing={3}>
+      <Grid container
+      alignItems="center"
+      justifyContent="center"
+      spacing={3}>
         {isStudent && isTutor ?
           <>
-            {/* Huidige sessie */}
+            {/* Huidige sessie 
           <Grid item xs={12} md={4} lg={4}>
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: '63vh',
-                      overflow: 'auto'
-                    }}
-                  >
-                    <HuidigeSessie  />
-                  </Paper>
+            <Paper
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                height: '63vh',
+                overflow: 'auto'
+              }}
+            >
+              <HuidigeSessie  />
+            </Paper>
           </Grid>
+          */}
           <Grid item xs={12} md={4} lg={4}>
           <Paper
               sx={{
@@ -294,7 +298,7 @@ import {
           <> {isStudent ?
               <>
                     {/* Huidige sessie */}
-          <Grid item xs={12} md={6} lg={6}>
+          {/*<Grid item xs={12} md={6} lg={6}>
                   <Paper
                     sx={{
                       p: 2,
@@ -308,6 +312,7 @@ import {
                     <HuidigeSessie  />
                   </Paper>
           </Grid>
+           */}
           <Grid item xs={12} md={6} lg={6}>
           <Paper
               sx={{
@@ -324,21 +329,6 @@ import {
           </Grid></>
             : 
               <>
-                    {/* Huidige sessie */}
-          <Grid item xs={12} md={6} lg={6}>
-                  <Paper
-                    sx={{
-                      p: 2,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      height: '70vh',
-                      overflow: 'auto'
-
-                    }}
-                  >
-                    <HuidigeSessie  />
-                  </Paper>
-          </Grid>
     
           <Grid item xs={12} md={6} lg={6}>
           <Paper sx={{ 

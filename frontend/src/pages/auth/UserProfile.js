@@ -504,10 +504,6 @@ function UserProfile() {
     )
   }
 
-  const EditGegevensUser = () => (
-
-  <></>
-  )
 
   const GegevensUser = () => (
     <>
