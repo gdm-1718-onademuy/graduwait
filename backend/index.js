@@ -107,7 +107,6 @@ app.post('/sendAppointmentConfirmation', cors(), (req, res) => {
     }
   }
 
-
   const data = JSON.stringify({
     //"api_key": "api-00580A8A6E3411EC94A5F23C91BBF4A0",
     "api_key": process.env.SMPT_API_KEY,
@@ -130,7 +129,59 @@ app.post('/sendAppointmentConfirmation', cors(), (req, res) => {
     "custom_headers": [
       {
         "header": "Reply-To",
-        "value": "Bijlessen Ona <onademuytere@icloud.com>"
+        "value": "Graduwait <info.graduwait@gmail.com"
+      }
+    ]
+  })
+
+  xhr.send(data)
+  .then(response => {
+    return res.json({resp: false, response})
+  })
+  .catch(error => {
+    return res.json({resp: true, error,})
+  })
+})
+
+// CANCEL OR CONFIRM MAIL
+app.post('/sendCancelorConfirm', cors(), (req, res) => {
+
+  const {status, name, subjects, date, starthour, endhour, opmerking, id, location, template_id, emailTutor} = req.body
+  
+  const url = "https://api.smtp2go.com/v3/email/send"
+  const xhr = new XMLHttpRequest()
+
+  xhr.open("POST", url)
+  xhr.setRequestHeader("Accept", "application/json")
+  xhr.setRequestHeader("Content-Type", "application/json")
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4) {
+        console.log(xhr.status)
+        console.log(xhr.responseText)
+    }
+  }
+
+  const data = JSON.stringify({
+    //"api_key": "api-00580A8A6E3411EC94A5F23C91BBF4A0",
+    "api_key": process.env.SMPT_API_KEY,
+    "to": [`${name} <${emailTutor}>`], // deze nog aanpassen aan daarom niet per see email tutor
+    "sender": "Graduwait <info.graduwait@gmail.com>",
+    "template_id": template_id,
+    "template_data": {
+      
+    "tutor_name":name,
+    "date":date,
+    "starthour":starthour,
+    "endhour":endhour,
+    "subjects":subjects,
+    "opmerking":opmerking,
+    //"confirm_url":`http://localhost:3000/agenda/myagenda/${afspraakid}`,
+    "location": location
+    },
+    "custom_headers": [
+      {
+        "header": "Reply-To",
+        "value": "Graduwait <info.graduwait@gmail.com>"
       }
     ]
   })

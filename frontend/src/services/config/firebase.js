@@ -261,6 +261,19 @@ const getUserData = async(userid) => {
   return data
 };
 
+const getAppointmentById = async(appointmentid) => {
+  let data 
+
+  await db.collection("tutoring")
+  .doc(appointmentid)
+  .get()
+  .then((querySnapshot) => {
+    data = querySnapshot.data()
+  })
+
+  return data
+};
+
 const getSubjectById = async(subjectid) => {
   let data 
 
@@ -593,5 +606,6 @@ export {
     getAppointmentsUser,
     getAllUsers,
     getSubjectById,
-    makeAppointment
+    makeAppointment,
+    getAppointmentById
   };

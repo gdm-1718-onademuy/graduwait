@@ -280,27 +280,40 @@ export default function GoogleCalendarGrid(props) {
     setShowAgenda(true)
     console.log(events)
   }, [person]);
+  
 
 
   const changeStatusAppointment = async (status) => {
   
-    const response = await editAppointment(status, appointmentDetails.id)
-    console.log(response)
+    //const response = await editAppointment(status, appointmentDetails.id)
+    //console.log(response)
     console.log(status)
+    let name = ""
+    let template_id = ""
+
     if (status === "confirm"){
       setAlertSnackbar(t('Dashboard.16'))
       handleClose()
       setOpenSnackBar(true)
       // TO DO : SEND EMAIL CONFIRMATION
+      console.log(appointmentDetails)
+      name = tutorName
+      template_id = "8443885"
+
 
     } else if (status === "cancel"){
       setAlertSnackbar(t('Dashboard.17'))
       handleClose()
       setOpenSnackBar(true)
       // TO DO : SEND EMAIL CONFIRMATION
-
+      template_id = "7769227"
+      if (appointmentDetails.tutorid === user.uid){
+        name = tuteeName
+      } else {
+        name = tutorName
+      }
     }
-
+    sendMailAfspraakStatus(status, name, appointmentDetails.subjects, appointmentDetails.date, appointmentDetails.starthour, appointmentDetails.endhour, appointmentDetails.id, appointmentDetails.location, template_id)
 
   }
 
@@ -326,8 +339,7 @@ export default function GoogleCalendarGrid(props) {
       setDate(arg.date.getFullYear() + "-" + month + "-" + day)
       //setStarthour(String(arg.date.getHours()).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
       //setEndhour(String(arg.date.getHours()+1).padStart(2, '0') + ":" + String(arg.date.getMinutes()).padStart(2,'0'))
-  
-  
+
     }
 
     //handleOpen()
@@ -460,24 +472,47 @@ export default function GoogleCalendarGrid(props) {
       await fetch("/sendAppointmentConfirmation", fetchData)
         .then((response) => {
           console.log(response)
-          handleClose()
-          setAlertSnackbar(t('Dashboard.15'))
+        })
+    handleClose()
+    setModalAppointment(false)
+    setAlertSnackbar(t('Dashboard.15'))
+    setOpenSnackBar(true);
+  }
 
-          setOpenSnackBar(true);
+  const sendMailAfspraakStatus = async (status, name, subjects, date, starthour, endhour, opmerking, id, location, template_id) => {
+    //const appointmentData = getAppointmentById()
+ 
+    const respObject = {status, name, subjects, date, starthour, endhour, opmerking, id, location, template_id, emailTutor}
 
+    console.log(emailTutor)
+    let response
+
+    const fetchData = {
+      crossDomain: false,
+      method: 'POST',
+      body: JSON.stringify(respObject),
+      headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"  
+      }
+      ,credentials: 'include',
+      }
+
+      await fetch("/sendCancelorConfirm", fetchData)
+        .then((response) => {
+          console.log(response)
           //console.log("gelukt om te sturen")
         })
-        /*.then(response => response.json())
-        .then((data) => {
-        response = data
-        })
-        .catch((error) => {
-        response = error
-        })
-
-        console.log(response)*/
     handleClose()
+    setModalAppointment(false)
+    if(status === "confirm"){
+      setAlertSnackbar(t('Dashboard.16'))
+    } else {
+      setAlertSnackbar(t('Dashboard.17'))
+    }
+    setOpenSnackBar(true);
   }
+
   const closeSnackbar = (event, reason) => {
     if (reason === 'clickaway') {
       return;
