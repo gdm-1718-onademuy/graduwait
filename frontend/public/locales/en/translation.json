@@ -87,7 +87,8 @@
         "3": "Disable tutoring",
         "4": "Disable getting tutored",
         "5": "Tutor",
-        "6": "Tutee"
+        "6": "Tutee",
+        "7": "Profile"
     },
     "Userdata": {
         "1": "First name",

@@ -255,7 +255,7 @@ import {
                       p: 2,
                       display: 'flex',
                       flexDirection: 'column',
-                      height: '65vh',
+                      height: '63vh',
                       overflow: 'auto'
                     }}
                   >
@@ -268,7 +268,7 @@ import {
               p: 2,
               display: 'flex',
               flexDirection: 'column',
-              height: '70vh',
+              height: '63vh',
               overflow: 'auto'
 
               }}
@@ -282,7 +282,7 @@ import {
                       p: 2, 
                       display: 'flex', 
                       flexDirection: 'column',
-                      height: '70vh',
+                      height: '63vh',
                       overflow: 'auto'
 
                   }}>
