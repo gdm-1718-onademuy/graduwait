@@ -8,7 +8,7 @@ import { Paper, Alert, Button, CssBaseline, TextField, FormControlLabel, Checkbo
 import "./auth.scss";
 import { passwordValidator, emailValidator } from "../../services/functions/validations";
 import colors from '../colours.scss';
-
+import Footer from "../../footer/Footer";
 import logo from '../../full_logo_closer.png';
 
 
@@ -45,6 +45,7 @@ function Login() {
     // nog checken als het klopt, en anders de setErrorChecked doen 
   }
   return (
+    <>
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -166,6 +167,8 @@ function Login() {
       </Box>
     </Container>
     </ThemeProvider>
+    <Footer/>
+    </>
   );
 }
 export default Login;

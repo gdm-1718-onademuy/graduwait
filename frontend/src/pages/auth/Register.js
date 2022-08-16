@@ -7,7 +7,7 @@ import { Button, Alert, TextField, Grid } from '@mui/material';
 import ProgressBar from './components/progressBar.js';
 import LayoutForms from "./components/LayoutForms.js";
 import ButtonNewHere from "./components/ButtonNewHere.js";
-
+import Footer from "../../footer/Footer.js";
 
 // styling
 import colors from '../colours.scss';
@@ -218,6 +218,7 @@ function Register() {
 
 
         </LayoutForms> 
+        <Footer/>
     </>
 }
 

@@ -8,7 +8,7 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import {useTranslation} from 'react-i18next';
-
+import Footer from "../../footer/Footer.js";
 
 
 // components
@@ -103,6 +103,7 @@ function Extra() {
 
   return <>
     { (bijlesGeven || bijlesKrijgen) ? (
+      <>
         <LayoutForms>
           <Grid container justifyContent="flex-end">
               <Grid item>
@@ -193,6 +194,8 @@ function Extra() {
               <ButtonNewHere/>
 
         </LayoutForms>
+        <Footer/>
+        </>
 
  
       ) : (

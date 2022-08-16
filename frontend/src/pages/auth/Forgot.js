@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import LayoutForms from "./components/LayoutForms.js";
 import { emailValidator} from "../../services/functions/validations";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import Footer from "../../footer/Footer.js";
 
 
 //import { Button } from '@material-ui/core';
@@ -180,6 +181,7 @@ function Forgot() {
             </div>
         </Grid>
         </LayoutForms>
+        <Footer/>
     </>
 
 }

@@ -20,6 +20,7 @@ import "./auth.scss";
 // components
 import LayoutForms from "./components/LayoutForms.js";
 import ButtonNewHere from "./components/ButtonNewHere.js";
+import Footer from "../../footer/Footer";
 
 
 function Welcome() {
@@ -113,6 +114,7 @@ function Welcome() {
           </div>
       </Grid>
     </LayoutForms>
+    <Footer/>
   </>
 }
 
